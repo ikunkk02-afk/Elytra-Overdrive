@@ -2,7 +2,7 @@
 
 ## 项目与范围
 
-Elytra Overdrive 面向 Minecraft 1.21.1、Fabric Loader 0.19.3、Java 21 和 Mojang 官方映射。当前范围只包含“超载”附魔、owo-lib 配置、安全高速飞行、轻量视觉反馈和额外耐久消耗；TNT 轰炸、三叉戟穿刺、自定义音效、模型和贴图均未实现。
+Elytra Overdrive 面向 Minecraft 1.21.1、Fabric Loader 0.19.3、Java 21 和 Mojang 官方映射。本记录只描述“超载”附魔、owo-lib 配置、安全高速飞行、轻量视觉反馈和额外耐久消耗；后续 TNT 轰炸与三叉戟破阵分别记录在独立实施文档中。
 
 ## 实际修改文件
 
@@ -16,7 +16,7 @@ Elytra Overdrive 面向 Minecraft 1.21.1、Fabric Loader 0.19.3、Java 21 和 Mo
 
 ### 主源码
 
-- `ElytraOverdrive`：加载配置并初始化网络和飞行处理器。
+- `ElytraOverdrive`：加载配置并初始化网络、飞行、轰炸和破阵处理器。
 - `config/OverdriveConfigModel`：owo-lib 配置模型。
 - `enchantment/OverdriveEnchantments`：附魔资源键、查询和鞘翅条件辅助方法。
 - `flight/FlightVelocity`：不依赖 Minecraft 的有限三维速度值。
@@ -27,7 +27,7 @@ Elytra Overdrive 面向 Minecraft 1.21.1、Fabric Loader 0.19.3、Java 21 和 Mo
 - `network/SelectedMultiplierC2SPayload`：玩家选择倍率的 C2S 提交。
 - `network/OverdriveStateS2CPayload`：服务端最终倍率和激活状态的 S2C 通知。
 - `network/OverdriveNetworking`：payload 注册、配置阶段验证和 C2S 接收。
-- `mixin/ServerGamePacketListenerImplMixin`：只在六参数 teleport 入口清理飞行状态。
+- `mixin/ServerGamePacketListenerImplMixin`：只在六参数 teleport 入口清理各系统运行状态。
 
 ### 客户端源码
 
@@ -131,4 +131,4 @@ FOV 仅对当前客户端生效，按每 tick 15% 向目标值平滑过渡，最
 - 自动测试只覆盖纯 Java 数值与资源契约，无法在普通 JUnit 中模拟完整 `ServerPlayer` 飞行。
 - FOV 和粒子只表示当前本地玩家的服务端确认状态，附近其他玩家不会看到这条粒子尾迹。
 - 当前网络协议要求客户端和服务端都安装本模组，不提供 vanilla 客户端兼容模式。
-- 仍未实现 TNT 空中轰炸、三叉戟穿刺、自定义音效、音爆、镜头震动、自定义模型和贴图。
+- TNT 空中轰炸与三叉戟破阵已在后续阶段实现；自定义音效、音爆、镜头震动、自定义模型和贴图仍不在当前范围。
