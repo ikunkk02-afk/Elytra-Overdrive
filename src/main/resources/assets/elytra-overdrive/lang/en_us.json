@@ -1,6 +1,7 @@
 {
   "enchantment.elytra_overdrive.overdrive": "Overdrive",
   "enchantment.elytra_overdrive.overdrive.description": "Allows the elytra to use the configured high-speed flight multiplier",
+  "tag.item.elytra-overdrive.enchantable.overdrive": "Overdrive Enchantable Elytra",
   "text.config.elytra-overdrive.title": "Elytra Overdrive Configuration",
   "text.config.elytra-overdrive.section.player": "Player and Visual Settings",
   "text.config.elytra-overdrive.section.server": "Server Safety Limits",

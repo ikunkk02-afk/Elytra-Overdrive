@@ -1,6 +1,7 @@
 {
   "enchantment.elytra_overdrive.overdrive": "超载",
   "enchantment.elytra_overdrive.overdrive.description": "允许鞘翅使用配置的高速飞行倍率",
+  "tag.item.elytra-overdrive.enchantable.overdrive": "可附魔超载的鞘翅",
   "text.config.elytra-overdrive.title": "Elytra Overdrive 配置",
   "text.config.elytra-overdrive.section.player": "玩家与视觉设置",
   "text.config.elytra-overdrive.section.server": "服务器安全限制",
