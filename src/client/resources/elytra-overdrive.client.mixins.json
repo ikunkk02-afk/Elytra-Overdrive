@@ -3,7 +3,8 @@
 	"package": "io.github.ikunkk02.elytraoverdrive.client.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"ExampleClientMixin"
+		"ClientCommonPacketListenerImplAccessor",
+		"GameRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
