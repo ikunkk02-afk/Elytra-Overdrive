@@ -52,12 +52,23 @@ Minecraft 1.21.1 的附魔通过注册表数据包加载，不注册旧式 Java 
 
 附魔被加入 `minecraft:non_treasure`。原版的附魔台、随机附魔书和相关非宝藏池会通过该标签关系识别它；命令和附魔书直接使用注册表 ID `elytra-overdrive:overdrive`。Java 辅助类只持有动态 `ResourceKey<Enchantment>` 并在运行时从注册表查找。
 
+`primary_items` 显式指向同一个仅含 `minecraft:elytra` 的专用标签。附魔台候选仍由原版 `#minecraft:in_enchanting_table`、`primary_items`、`supported_items`、等级费用和互斥集合共同过滤，不硬编码添加 Overdrive。
+
+## 鞘翅附魔台支持
+
+Minecraft 1.21.1 没有后续版本的 `DataComponents.ENCHANTABLE`。`ItemStack#isEnchantable` 已会把单堆叠且具有耐久的 Elytra 视为可附魔；真正导致附魔台没有选项的是 `EnchantmentHelper#getEnchantmentCost` 和 `selectEnchantment` 读取 `Item#getEnchantmentValue()`，而 `ElytraItem` 未覆盖该方法，原版返回值为 0。
+
+`ItemMixin` 在 `Item#getEnchantmentValue()` 的 `RETURN` 注入，仅当目标对象严格等于 `Items.ELYTRA` 时，将结果替换为服务器同步的 `elytraEnchantability`。默认值为 10，运行时安全限制为 1–30。其他物品保留原返回值；没有修改默认 Data Component，也没有修改或重写 `EnchantmentMenu`、`EnchantmentHelper`、附魔书、铁砧或磨石。
+
+附魔台继续由服务器生成费用和最终附魔，并正常消耗经验等级与青金石。原版 `unbreaking` 的 supported-items durability 标签已经包含 Elytra；`mending` 不在 `#minecraft:in_enchanting_table`，因此仍不能通过普通附魔台获得。其他附魔也必须同时通过自身 primary/supported items、费用和互斥规则。
+
 ## 配置与同步方案
 
 owo 配置模型分为玩家与服务器两组：
 
 - 玩家：倍率默认 `2.0`、粒子默认开启、FOV 默认开启。
 - 服务器：高速总开关默认开启、最大倍率默认 `10.0`、额外耐久默认开启、间隔默认 `40 tick`。
+- 鞘翅附魔台：附魔能力默认 `10`，范围 `1–30`，由服务器同步。
 
 倍率范围为 `1.0–20.0`，耐久间隔范围为 `10–200 tick`。服务器字段使用 owo `OVERRIDE_CLIENT`；远程客户端接收服务器值并不能覆盖安全限制，单人世界仍可本地管理。
 
@@ -125,6 +136,13 @@ FOV 仅对当前客户端生效，按每 tick 15% 向目标值平滑过渡，最
 12. 客户端设置 20 倍、服务器上限 5 倍时实际只能使用 5 倍。
 13. 烟花推进不会绕过最大速度限制。
 14. 高速飞行会按配置额外消耗耐久。
+15. 普通 Elytra 可以放入附魔台并出现三档选项。
+16. 不同书架等级会改变附魔费用，点击后正常消耗经验和青金石。
+17. 可随机获得 Overdrive、耐久或其他真正兼容的普通附魔。
+18. 不会出现锋利、效率等不支持 Elytra 的附魔。
+19. 经验修补等宝藏附魔仍不从普通附魔台出现。
+20. 已附魔 Elytra 可通过磨石移除非诅咒附魔，并保留正常铁砧/附魔书行为。
+21. 附魔后的 Overdrive Elytra 高速飞行正常，Breach 三叉戟附魔台候选不受影响。
 
 ## 已知限制与尚未实现
 

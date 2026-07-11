@@ -22,6 +22,8 @@
   "text.config.elytra-overdrive.option.extraDurabilityDamage.tooltip": "Consumes one additional durability point at the configured interval while high-speed flight is active.",
   "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks": "Extra Durability Interval",
   "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks.tooltip": "Ticks between additional durability attempts. Unbreaking still applies.",
+  "text.config.elytra-overdrive.option.elytraEnchantability": "Elytra Enchantability",
+  "text.config.elytra-overdrive.option.elytraEnchantability.tooltip": "Controls the enchantment quality used when a vanilla elytra is placed in an enchanting table.",
   "text.config.elytra-overdrive.section.bombing": "Aerial Bombing",
   "text.config.elytra-overdrive.option.enableBombing": "Enable Aerial Bombing",
   "text.config.elytra-overdrive.option.enableBombing.tooltip": "Server-authoritative switch for dropping TNT while elytra flying.",

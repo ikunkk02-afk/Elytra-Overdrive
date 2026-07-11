@@ -22,6 +22,8 @@
   "text.config.elytra-overdrive.option.extraDurabilityDamage.tooltip": "高速飞行激活时按配置间隔额外尝试消耗一点耐久。",
   "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks": "额外耐久消耗间隔",
   "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks.tooltip": "额外耐久消耗尝试之间的 tick 数，耐久附魔仍会正常生效。",
+  "text.config.elytra-overdrive.option.elytraEnchantability": "鞘翅附魔能力",
+  "text.config.elytra-overdrive.option.elytraEnchantability.tooltip": "控制原版鞘翅放入附魔台时使用的附魔品质。",
   "text.config.elytra-overdrive.section.bombing": "空中轰炸",
   "text.config.elytra-overdrive.option.enableBombing": "启用空中轰炸",
   "text.config.elytra-overdrive.option.enableBombing.tooltip": "控制鞘翅飞行时投放 TNT 的服务端权威开关。",

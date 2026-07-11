@@ -35,6 +35,10 @@ public class OverdriveConfigModel {
 	@RangeConstraint(min = 10.0, max = 200.0, decimalPlaces = 0)
 	public int extraDurabilityIntervalTicks = 40;
 
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	@RangeConstraint(min = 1.0, max = 30.0, decimalPlaces = 0)
+	public int elytraEnchantability = 10;
+
 	@SectionHeader("bombing")
 	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
 	public boolean enableBombing = true;

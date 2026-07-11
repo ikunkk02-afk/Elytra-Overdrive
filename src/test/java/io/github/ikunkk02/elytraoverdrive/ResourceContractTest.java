@@ -22,6 +22,7 @@ class ResourceContractTest {
 		JsonObject enchantment = readJson(RESOURCES.resolve("data/elytra-overdrive/enchantment/overdrive.json"));
 
 		assertEquals("#elytra-overdrive:enchantable/overdrive", enchantment.get("supported_items").getAsString());
+		assertEquals("#elytra-overdrive:enchantable/overdrive", enchantment.get("primary_items").getAsString());
 		assertEquals(1, enchantment.get("max_level").getAsInt());
 		assertEquals(2, enchantment.get("weight").getAsInt());
 		assertEquals("chest", enchantment.getAsJsonArray("slots").get(0).getAsString());
@@ -116,6 +117,18 @@ class ResourceContractTest {
 		Path input = Path.of("src", "client", "java", "io", "github", "ikunkk02", "elytraoverdrive", "client", "BombingInputHandler.java");
 
 		assertTrue(contains(input, "ClientPlayConnectionEvents.DISCONNECT"));
+	}
+
+	@Test
+	void elytraEnchantingMixinOnlyChangesVanillaElytraEnchantability() throws IOException {
+		Path mixin = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "mixin", "ItemMixin.java");
+		String source = Files.readString(mixin);
+
+		assertTrue(source.contains("@Mixin(Item.class)"));
+		assertTrue(source.contains("method = \"getEnchantmentValue\""));
+		assertTrue(source.contains("@At(\"RETURN\")"));
+		assertTrue(source.contains("(Object)this == Items.ELYTRA"));
+		assertFalse(source.contains("EnchantmentMenu"));
 	}
 
 	private static JsonObject readJson(Path path) throws IOException {
