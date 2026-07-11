@@ -1,0 +1,23 @@
+{
+  "enchantment.elytra_overdrive.overdrive": "Overdrive",
+  "enchantment.elytra_overdrive.overdrive.description": "Allows the elytra to use the configured high-speed flight multiplier",
+  "text.config.elytra-overdrive.title": "Elytra Overdrive Configuration",
+  "text.config.elytra-overdrive.section.player": "Player and Visual Settings",
+  "text.config.elytra-overdrive.section.server": "Server Safety Limits",
+  "text.config.elytra-overdrive.option.playerSelectedMultiplier": "Flight Speed Multiplier",
+  "text.config.elytra-overdrive.option.playerSelectedMultiplier.tooltip": "Only applies while flying with an elytra enchanted with Overdrive. The server maximum always takes priority.",
+  "text.config.elytra-overdrive.option.showHighSpeedParticles": "Show High-Speed Particles",
+  "text.config.elytra-overdrive.option.showHighSpeedParticles.tooltip": "Shows a small local particle trail while Overdrive is active.",
+  "text.config.elytra-overdrive.option.enableHighSpeedFov": "Enable High-Speed FOV",
+  "text.config.elytra-overdrive.option.enableHighSpeedFov.tooltip": "Smoothly widens only the current player's view while Overdrive is active.",
+  "text.config.elytra-overdrive.option.enableHighSpeedFlight": "Enable High-Speed Flight",
+  "text.config.elytra-overdrive.option.enableHighSpeedFlight.tooltip": "Server-authoritative switch for all Overdrive flight acceleration.",
+  "text.config.elytra-overdrive.option.serverMaximumMultiplier": "Server Maximum Multiplier",
+  "text.config.elytra-overdrive.option.serverMaximumMultiplier.tooltip": "Clients can never exceed this server-authoritative multiplier.",
+  "text.config.elytra-overdrive.option.extraDurabilityDamage": "Extra Durability Consumption",
+  "text.config.elytra-overdrive.option.extraDurabilityDamage.tooltip": "Consumes one additional durability point at the configured interval while high-speed flight is active.",
+  "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks": "Extra Durability Interval",
+  "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks.tooltip": "Ticks between additional durability attempts. Unbreaking still applies.",
+  "disconnect.elytra_overdrive.client_required": "Elytra Overdrive is required on the client to join this server.",
+  "disconnect.elytra_overdrive.protocol_mismatch": "Incompatible Elytra Overdrive network protocol."
+}

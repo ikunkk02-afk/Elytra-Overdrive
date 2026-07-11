@@ -1,0 +1,23 @@
+{
+  "enchantment.elytra_overdrive.overdrive": "超载",
+  "enchantment.elytra_overdrive.overdrive.description": "允许鞘翅使用配置的高速飞行倍率",
+  "text.config.elytra-overdrive.title": "Elytra Overdrive 配置",
+  "text.config.elytra-overdrive.section.player": "玩家与视觉设置",
+  "text.config.elytra-overdrive.section.server": "服务器安全限制",
+  "text.config.elytra-overdrive.option.playerSelectedMultiplier": "飞行速度倍率",
+  "text.config.elytra-overdrive.option.playerSelectedMultiplier.tooltip": "仅在穿着带“超载”附魔的鞘翅飞行时生效，始终受服务器最大倍率限制。",
+  "text.config.elytra-overdrive.option.showHighSpeedParticles": "显示高速粒子",
+  "text.config.elytra-overdrive.option.showHighSpeedParticles.tooltip": "超载激活时在本地显示少量尾迹粒子。",
+  "text.config.elytra-overdrive.option.enableHighSpeedFov": "启用高速视野变化",
+  "text.config.elytra-overdrive.option.enableHighSpeedFov.tooltip": "超载激活时仅平滑改变当前玩家的视野。",
+  "text.config.elytra-overdrive.option.enableHighSpeedFlight": "启用高速飞行",
+  "text.config.elytra-overdrive.option.enableHighSpeedFlight.tooltip": "控制所有超载飞行加速的服务端权威开关。",
+  "text.config.elytra-overdrive.option.serverMaximumMultiplier": "服务端允许的最大倍率",
+  "text.config.elytra-overdrive.option.serverMaximumMultiplier.tooltip": "客户端选择永远不能突破此服务端权威上限。",
+  "text.config.elytra-overdrive.option.extraDurabilityDamage": "高速飞行额外耐久消耗",
+  "text.config.elytra-overdrive.option.extraDurabilityDamage.tooltip": "高速飞行激活时按配置间隔额外尝试消耗一点耐久。",
+  "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks": "额外耐久消耗间隔",
+  "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks.tooltip": "额外耐久消耗尝试之间的 tick 数，耐久附魔仍会正常生效。",
+  "disconnect.elytra_overdrive.client_required": "此服务器要求客户端安装 Elytra Overdrive。",
+  "disconnect.elytra_overdrive.protocol_mismatch": "Elytra Overdrive 网络协议版本不兼容。"
+}
