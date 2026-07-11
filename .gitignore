@@ -1,0 +1,54 @@
+# gradle
+
+.gradle/
+build/
+out/
+classes/
+.cache/
+
+# eclipse
+
+*.launch
+
+# idea
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+
+*.DS_Store
+
+# fabric
+
+run/
+logs/
+crash-reports/
+
+# java
+
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
+
+# local secrets and environment files
+
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.jks
+secrets.*
+credentials.*

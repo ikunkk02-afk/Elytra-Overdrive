@@ -1,0 +1,45 @@
+{
+	"schemaVersion": 1,
+	"id": "elytra-overdrive",
+	"version": "${version}",
+	"name": "Elytra Overdrive",
+	"description": "Adds a configurable high-speed enchantment for the vanilla elytra.",
+	"authors": [
+		"寿云"
+	],
+	"contact": {
+		"homepage": "https://github.com/ikunkk02-afk/Elytra-Overdrive",
+		"sources": "https://github.com/ikunkk02-afk/Elytra-Overdrive"
+	},
+	"license": "MIT",
+	"icon": "assets/elytra-overdrive/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.ikunkk02.elytraoverdrive.ElytraOverdrive"
+		],
+		"client": [
+			"io.github.ikunkk02.elytraoverdrive.client.ElytraOverdriveClient"
+		],
+		"fabric-datagen": [
+			"io.github.ikunkk02.elytraoverdrive.client.ElytraOverdriveDataGenerator"
+		]
+	},
+	"mixins": [
+		"elytra-overdrive.mixins.json",
+		{
+			"config": "elytra-overdrive.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": ">=0.116.13+1.21.1",
+		"owo": ">=0.12.15.4+1.21"
+	},
+	"suggests": {
+		"modmenu": ">=11.0.4"
+	}
+}
