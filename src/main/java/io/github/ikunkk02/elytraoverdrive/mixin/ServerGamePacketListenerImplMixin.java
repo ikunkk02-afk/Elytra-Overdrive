@@ -1,6 +1,7 @@
 package io.github.ikunkk02.elytraoverdrive.mixin;
 
 import io.github.ikunkk02.elytraoverdrive.flight.OverdriveFlightHandler;
+import io.github.ikunkk02.elytraoverdrive.bombing.BombingHandler;
 import java.util.Set;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -34,5 +35,6 @@ public abstract class ServerGamePacketListenerImplMixin {
 			CallbackInfo ci
 	) {
 		OverdriveFlightHandler.resetRuntimeState(this.player);
+		BombingHandler.resetRuntimeState(this.player);
 	}
 }

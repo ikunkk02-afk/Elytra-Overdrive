@@ -1,6 +1,7 @@
 package io.github.ikunkk02.elytraoverdrive.network;
 
 import io.github.ikunkk02.elytraoverdrive.ElytraOverdrive;
+import io.github.ikunkk02.elytraoverdrive.bombing.BombingHandler;
 import io.github.ikunkk02.elytraoverdrive.flight.OverdriveFlightHandler;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
@@ -15,6 +16,8 @@ public final class OverdriveNetworking {
 	public static void initialize() {
 		PayloadTypeRegistry.configurationS2C().register(RequiredClientPayload.TYPE, RequiredClientPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(SelectedMultiplierC2SPayload.TYPE, SelectedMultiplierC2SPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(StartBombingC2SPayload.TYPE, StartBombingC2SPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(StopBombingC2SPayload.TYPE, StopBombingC2SPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(OverdriveStateS2CPayload.TYPE, OverdriveStateS2CPayload.CODEC);
 
 		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
@@ -37,5 +40,11 @@ public final class OverdriveNetworking {
 				);
 			}
 		});
+		ServerPlayNetworking.registerGlobalReceiver(StartBombingC2SPayload.TYPE, (payload, context) ->
+				BombingHandler.start(context.player())
+		);
+		ServerPlayNetworking.registerGlobalReceiver(StopBombingC2SPayload.TYPE, (payload, context) ->
+				BombingHandler.stop(context.player())
+		);
 	}
 }

@@ -7,5 +7,6 @@ public class ElytraOverdriveClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ClientOverdriveNetworking.initialize();
 		OverdriveVisuals.initialize();
+		BombingInputHandler.initialize();
 	}
 }

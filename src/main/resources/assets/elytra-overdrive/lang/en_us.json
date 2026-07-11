@@ -19,6 +19,15 @@
   "text.config.elytra-overdrive.option.extraDurabilityDamage.tooltip": "Consumes one additional durability point at the configured interval while high-speed flight is active.",
   "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks": "Extra Durability Interval",
   "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks.tooltip": "Ticks between additional durability attempts. Unbreaking still applies.",
+  "text.config.elytra-overdrive.section.bombing": "Aerial Bombing",
+  "text.config.elytra-overdrive.option.enableBombing": "Enable Aerial Bombing",
+  "text.config.elytra-overdrive.option.enableBombing.tooltip": "Server-authoritative switch for dropping TNT while elytra flying.",
+  "text.config.elytra-overdrive.option.bombingIntervalTicks": "Bombing Interval",
+  "text.config.elytra-overdrive.option.bombingIntervalTicks.tooltip": "Server ticks between bombs while the use button is held.",
+  "text.config.elytra-overdrive.option.bombFuseTicks": "Bomb Fuse",
+  "text.config.elytra-overdrive.option.bombFuseTicks.tooltip": "Fuse duration in server ticks for dropped TNT.",
+  "text.config.elytra-overdrive.option.bombHorizontalInertia": "Bomb Horizontal Inertia",
+  "text.config.elytra-overdrive.option.bombHorizontalInertia.tooltip": "Fraction of the player's horizontal velocity inherited by dropped TNT.",
   "disconnect.elytra_overdrive.client_required": "Elytra Overdrive is required on the client to join this server.",
   "disconnect.elytra_overdrive.protocol_mismatch": "Incompatible Elytra Overdrive network protocol."
 }

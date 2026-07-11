@@ -19,6 +19,15 @@
   "text.config.elytra-overdrive.option.extraDurabilityDamage.tooltip": "高速飞行激活时按配置间隔额外尝试消耗一点耐久。",
   "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks": "额外耐久消耗间隔",
   "text.config.elytra-overdrive.option.extraDurabilityIntervalTicks.tooltip": "额外耐久消耗尝试之间的 tick 数，耐久附魔仍会正常生效。",
+  "text.config.elytra-overdrive.section.bombing": "空中轰炸",
+  "text.config.elytra-overdrive.option.enableBombing": "启用空中轰炸",
+  "text.config.elytra-overdrive.option.enableBombing.tooltip": "控制鞘翅飞行时投放 TNT 的服务端权威开关。",
+  "text.config.elytra-overdrive.option.bombingIntervalTicks": "连续投弹间隔",
+  "text.config.elytra-overdrive.option.bombingIntervalTicks.tooltip": "长按使用键时两次投弹之间的服务端 tick 数。",
+  "text.config.elytra-overdrive.option.bombFuseTicks": "炸弹引信时间",
+  "text.config.elytra-overdrive.option.bombFuseTicks.tooltip": "投放 TNT 的服务端引信 tick 数。",
+  "text.config.elytra-overdrive.option.bombHorizontalInertia": "炸弹水平惯性",
+  "text.config.elytra-overdrive.option.bombHorizontalInertia.tooltip": "投放 TNT 继承玩家水平速度的比例。",
   "disconnect.elytra_overdrive.client_required": "此服务器要求客户端安装 Elytra Overdrive。",
   "disconnect.elytra_overdrive.protocol_mismatch": "Elytra Overdrive 网络协议版本不兼容。"
 }

@@ -1,6 +1,7 @@
 package io.github.ikunkk02.elytraoverdrive;
 
 import io.github.ikunkk02.elytraoverdrive.config.OverdriveConfig;
+import io.github.ikunkk02.elytraoverdrive.bombing.BombingHandler;
 import io.github.ikunkk02.elytraoverdrive.flight.OverdriveFlightHandler;
 import io.github.ikunkk02.elytraoverdrive.network.OverdriveNetworking;
 import net.fabricmc.api.ModInitializer;
@@ -17,6 +18,7 @@ public class ElytraOverdrive implements ModInitializer {
 	public void onInitialize() {
 		OverdriveNetworking.initialize();
 		OverdriveFlightHandler.initialize();
+		BombingHandler.initialize();
 		LOGGER.info("Initializing Elytra Overdrive");
 	}
 

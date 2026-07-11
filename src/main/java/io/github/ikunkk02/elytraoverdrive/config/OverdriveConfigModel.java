@@ -34,4 +34,20 @@ public class OverdriveConfigModel {
 	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
 	@RangeConstraint(min = 10.0, max = 200.0, decimalPlaces = 0)
 	public int extraDurabilityIntervalTicks = 40;
+
+	@SectionHeader("bombing")
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	public boolean enableBombing = true;
+
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	@RangeConstraint(min = 4.0, max = 100.0, decimalPlaces = 0)
+	public int bombingIntervalTicks = 12;
+
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	@RangeConstraint(min = 20.0, max = 200.0, decimalPlaces = 0)
+	public int bombFuseTicks = 80;
+
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	@RangeConstraint(min = 0.0, max = 1.5, decimalPlaces = 2)
+	public double bombHorizontalInertia = 0.70;
 }
