@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "elytra-overdrive:overdrive"
+    "elytra-overdrive:overdrive",
+    "elytra-overdrive:breach"
   ]
 }

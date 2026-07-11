@@ -2,6 +2,7 @@ package io.github.ikunkk02.elytraoverdrive.mixin;
 
 import io.github.ikunkk02.elytraoverdrive.flight.OverdriveFlightHandler;
 import io.github.ikunkk02.elytraoverdrive.bombing.BombingHandler;
+import io.github.ikunkk02.elytraoverdrive.breach.BreachHandler;
 import java.util.Set;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -36,5 +37,6 @@ public abstract class ServerGamePacketListenerImplMixin {
 	) {
 		OverdriveFlightHandler.resetRuntimeState(this.player);
 		BombingHandler.resetRuntimeState(this.player);
+		BreachHandler.resetRuntimeState(this.player);
 	}
 }

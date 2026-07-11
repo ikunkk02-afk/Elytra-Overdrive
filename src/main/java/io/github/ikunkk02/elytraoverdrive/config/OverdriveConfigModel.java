@@ -50,4 +50,26 @@ public class OverdriveConfigModel {
 	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
 	@RangeConstraint(min = 0.0, max = 1.5, decimalPlaces = 2)
 	public double bombHorizontalInertia = 0.70;
+
+	@SectionHeader("tridentBreach")
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	public boolean enableTridentBreach = true;
+
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	@RangeConstraint(min = 0.3, max = 10.0, decimalPlaces = 1)
+	public double minimumBreachSpeed = 1.2;
+
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	@RangeConstraint(min = 1.0, max = 128.0, decimalPlaces = 0)
+	public int maximumBreachBlocksPerTick = 32;
+
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	@RangeConstraint(min = 0.1, max = 10.0, decimalPlaces = 1)
+	public double breachDurabilityMultiplier = 1.0;
+
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	public boolean breachDropsBlocks = true;
+
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	public boolean protectBlockEntitiesFromBreach = true;
 }

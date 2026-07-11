@@ -16,6 +16,10 @@ public final class OverdriveEnchantments {
 			Registries.ENCHANTMENT,
 			ElytraOverdrive.id("overdrive")
 	);
+	public static final ResourceKey<Enchantment> BREACH = ResourceKey.create(
+			Registries.ENCHANTMENT,
+			ElytraOverdrive.id("breach")
+	);
 
 	private OverdriveEnchantments() {
 	}
@@ -36,5 +40,15 @@ public final class OverdriveEnchantments {
 		return chestStack.is(Items.ELYTRA)
 				&& ElytraItem.isFlyEnabled(chestStack)
 				&& hasOverdrive(entity, chestStack);
+	}
+
+	public static int getBreachLevel(LivingEntity entity, ItemStack stack) {
+		if (!stack.is(Items.TRIDENT)) {
+			return 0;
+		}
+		var enchantment = entity.registryAccess()
+				.registryOrThrow(Registries.ENCHANTMENT)
+				.getHolderOrThrow(BREACH);
+		return EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack);
 	}
 }

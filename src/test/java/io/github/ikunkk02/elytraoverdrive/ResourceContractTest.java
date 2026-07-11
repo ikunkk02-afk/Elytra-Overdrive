@@ -37,11 +37,30 @@ class ResourceContractTest {
 	}
 
 	@Test
+	void breachEnchantmentUsesTheDedicatedTridentTag() throws IOException {
+		JsonObject enchantment = readJson(RESOURCES.resolve("data/elytra-overdrive/enchantment/breach.json"));
+
+		assertEquals("#elytra-overdrive:enchantable/breach", enchantment.get("supported_items").getAsString());
+		assertEquals(3, enchantment.get("max_level").getAsInt());
+		assertEquals("mainhand", enchantment.getAsJsonArray("slots").get(0).getAsString());
+	}
+
+	@Test
+	void breachItemTagContainsOnlyVanillaTrident() throws IOException {
+		JsonObject tag = readJson(RESOURCES.resolve("data/elytra-overdrive/tags/item/enchantable/breach.json"));
+		JsonArray values = tag.getAsJsonArray("values");
+
+		assertEquals(1, values.size());
+		assertEquals("minecraft:trident", values.get(0).getAsString());
+	}
+
+	@Test
 	void overdriveIsAvailableThroughTheNonTreasurePool() throws IOException {
 		JsonObject tag = readJson(RESOURCES.resolve("data/minecraft/tags/enchantment/non_treasure.json"));
 		List<String> values = tag.getAsJsonArray("values").asList().stream().map(element -> element.getAsString()).toList();
 
 		assertTrue(values.contains("elytra-overdrive:overdrive"));
+		assertTrue(values.contains("elytra-overdrive:breach"));
 	}
 
 	@Test
@@ -61,9 +80,12 @@ class ResourceContractTest {
 
 			assertTrue(translations.has("enchantment.elytra_overdrive.overdrive"));
 			assertTrue(translations.has("enchantment.elytra_overdrive.overdrive.description"));
+			assertTrue(translations.has("enchantment.elytra_overdrive.breach"));
+			assertTrue(translations.has("enchantment.elytra_overdrive.breach.description"));
 			assertTrue(translations.has("text.config.elytra-overdrive.title"));
 			assertTrue(translations.has("text.config.elytra-overdrive.option.playerSelectedMultiplier"));
 			assertTrue(translations.has("text.config.elytra-overdrive.option.serverMaximumMultiplier"));
+			assertTrue(translations.has("text.config.elytra-overdrive.option.enableTridentBreach"));
 		}
 	}
 
@@ -78,6 +100,22 @@ class ResourceContractTest {
 					.toList();
 			assertTrue(offenders.isEmpty(), () -> "Client imports found in main sources: " + offenders);
 		}
+	}
+
+	@Test
+	void breachKeepsSpawnProtectionAndOwnsDurabilityDamage() throws IOException {
+		Path handler = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "breach", "BreachHandler.java");
+		Path mixin = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "mixin", "ServerPlayerGameModeMixin.java");
+
+		assertTrue(contains(handler, "isUnderSpawnProtection"));
+		assertTrue(contains(mixin, "suppressNativeBreachDurability"));
+	}
+
+	@Test
+	void bombingInputResetsAcrossClientConnections() throws IOException {
+		Path input = Path.of("src", "client", "java", "io", "github", "ikunkk02", "elytraoverdrive", "client", "BombingInputHandler.java");
+
+		assertTrue(contains(input, "ClientPlayConnectionEvents.DISCONNECT"));
 	}
 
 	private static JsonObject readJson(Path path) throws IOException {
