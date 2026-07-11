@@ -46,8 +46,12 @@ public final class OverdriveFlightHandler {
 
 	public static void resetRuntimeState(ServerPlayer player) {
 		FlightSessionState state = SESSIONS.computeIfAbsent(player.getUUID(), ignored -> new FlightSessionState());
+		boolean wasActive = state.active();
 		state.setActive(false);
-		player.setDeltaMovement(Vec3.ZERO);
+		if (wasActive) {
+			player.setDeltaMovement(Vec3.ZERO);
+			player.hurtMarked = true;
+		}
 		synchronize(player, state, state.effectiveMultiplier(ElytraOverdrive.CONFIG.serverMaximumMultiplier()), false);
 	}
 
@@ -76,7 +80,9 @@ public final class OverdriveFlightHandler {
 		}
 
 		state.setActive(true);
-		tickDurability(player, state, effectiveMultiplier);
+		if (!tickDurability(player, state, effectiveMultiplier)) {
+			return;
+		}
 		synchronize(player, state, effectiveMultiplier, true);
 	}
 
@@ -94,17 +100,17 @@ public final class OverdriveFlightHandler {
 				&& OverdriveEnchantments.hasOverdrive(player, chest);
 	}
 
-	private static void tickDurability(ServerPlayer player, FlightSessionState state, double effectiveMultiplier) {
+	private static boolean tickDurability(ServerPlayer player, FlightSessionState state, double effectiveMultiplier) {
 		if (!ElytraOverdrive.CONFIG.extraDurabilityDamage()
 				|| effectiveMultiplier <= FlightSpeedController.MIN_MULTIPLIER
 				|| player.getAbilities().instabuild) {
 			state.resetDurabilityTicks();
-			return;
+			return true;
 		}
 
 		int interval = Math.max(10, Math.min(200, ElytraOverdrive.CONFIG.extraDurabilityIntervalTicks()));
 		if (state.incrementDurabilityTicks() < interval) {
-			return;
+			return true;
 		}
 
 		state.resetDurabilityTicks();
@@ -112,7 +118,9 @@ public final class OverdriveFlightHandler {
 		chest.hurtAndBreak(1, player, EquipmentSlot.CHEST);
 		if (!ElytraItem.isFlyEnabled(chest)) {
 			deactivate(player, state, effectiveMultiplier);
+			return false;
 		}
+		return true;
 	}
 
 	private static void deactivate(ServerPlayer player, FlightSessionState state, double effectiveMultiplier) {

@@ -82,7 +82,7 @@ acceleration = min(0.04 × (finalMultiplier - 1), 0.8) blocks/tick²
 
 ## Mixin 注入点
 
-- 服务端只有 `ServerGamePacketListenerImpl#teleport(double, double, double, float, float, Set<RelativeMovement>)` 的 `HEAD` 注入。传送是清除旧速度和运行状态的明确边界，普通移动逻辑不被覆盖。
+- 服务端只有 `ServerGamePacketListenerImpl#teleport(double, double, double, float, float, Set<RelativeMovement>)` 的 `HEAD` 注入。传送是清除运行状态的明确边界；仅在传送前确实处于超载激活状态时归零速度，因此不会改变普通玩家的原版传送行为，普通移动逻辑也不被覆盖。
 - 客户端只有 `GameRenderer#getFov(Camera, float, boolean)` 的 `RETURN` 注入。它在原版结果上叠加最多 15° 的平滑瞬时偏移，不写入或永久修改玩家 FOV 选项。
 
 ## 临时状态与耐久

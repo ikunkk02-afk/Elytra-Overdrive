@@ -31,7 +31,7 @@ public final class OverdriveNetworking {
 
 		ServerPlayNetworking.registerGlobalReceiver(SelectedMultiplierC2SPayload.TYPE, (payload, context) -> {
 			if (!OverdriveFlightHandler.updateSelectedMultiplier(context.player(), payload.multiplier())) {
-				ElytraOverdrive.LOGGER.warn(
+				ElytraOverdrive.LOGGER.debug(
 						"Rejected invalid overdrive multiplier from player {}",
 						context.player().getGameProfile().getName()
 				);
