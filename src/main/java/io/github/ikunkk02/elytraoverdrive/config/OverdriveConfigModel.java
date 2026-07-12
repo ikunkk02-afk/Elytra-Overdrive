@@ -3,13 +3,11 @@ package io.github.ikunkk02.elytraoverdrive.config;
 import io.wispforest.owo.config.Option;
 import io.wispforest.owo.config.annotation.Config;
 import io.wispforest.owo.config.annotation.Hook;
-import io.wispforest.owo.config.annotation.Modmenu;
 import io.wispforest.owo.config.annotation.RangeConstraint;
 import io.wispforest.owo.config.annotation.SectionHeader;
 import io.wispforest.owo.config.annotation.Sync;
 
 @Config(name = "elytra-overdrive", wrapperName = "OverdriveConfig")
-@Modmenu(modId = "elytra-overdrive")
 public class OverdriveConfigModel {
 	@SectionHeader("player")
 	@RangeConstraint(min = 1.0, max = 20.0, decimalPlaces = 1)
@@ -21,6 +19,19 @@ public class OverdriveConfigModel {
 	public boolean showHighSpeedParticles = true;
 
 	public boolean enableHighSpeedFov = true;
+
+	public VisualPreset visualPreset = VisualPreset.BALANCED;
+
+	public boolean enableWingtipTrails = true;
+
+	public boolean enableSpeedLines = true;
+
+	public boolean enableSonicBoomRing = true;
+
+	public boolean reduceMotion = false;
+
+	@RangeConstraint(min = 0.0, max = 1.5, decimalPlaces = 2)
+	public double fovIntensity = 1.0;
 
 	@SectionHeader("server")
 	@Sync(Option.SyncMode.OVERRIDE_CLIENT)

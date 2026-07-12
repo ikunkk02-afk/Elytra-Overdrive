@@ -87,6 +87,11 @@ class ResourceContractTest {
 			assertTrue(translations.has("text.config.elytra-overdrive.option.playerSelectedMultiplier"));
 			assertTrue(translations.has("text.config.elytra-overdrive.option.serverMaximumMultiplier"));
 			assertTrue(translations.has("text.config.elytra-overdrive.option.enableTridentBreach"));
+			assertTrue(translations.has("screen.elytra_overdrive.title"));
+			assertTrue(translations.has("screen.elytra_overdrive.nav.flight"));
+			assertTrue(translations.has("screen.elytra_overdrive.status.no_data"));
+			assertTrue(translations.has("screen.elytra_overdrive.firework.locked_help"));
+			assertTrue(translations.has("screen.elytra_overdrive.saved"));
 		}
 	}
 
@@ -164,6 +169,27 @@ class ResourceContractTest {
 			assertTrue(translations.has("command.elytra_overdrive.firework_mode.enabled"));
 			assertTrue(translations.has("command.elytra_overdrive.firework_mode.disabled"));
 			assertTrue(translations.has("command.elytra_overdrive.no_permission"));
+		}
+	}
+
+	@Test
+	void controlTerminalReplacesGeneratedScreenWithoutModMenuDependency() throws IOException {
+		Path configModel = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "config", "OverdriveConfigModel.java");
+		Path clientInitializer = Path.of("src", "client", "java", "io", "github", "ikunkk02", "elytraoverdrive", "client", "ElytraOverdriveClient.java");
+		Path screen = Path.of("src", "client", "java", "io", "github", "ikunkk02", "elytraoverdrive", "client", "config", "OverdriveControlScreen.java");
+
+		assertFalse(contains(configModel, "@Modmenu"));
+		assertTrue(contains(clientInitializer, "ConfigScreenProviders.register"));
+		assertTrue(Files.exists(screen));
+		assertTrue(contains(screen, "extends BaseOwoScreen<FlowLayout>"));
+
+		Path mainJava = Path.of("src", "main", "java");
+		try (var files = Files.walk(mainJava)) {
+			List<Path> offenders = files
+					.filter(path -> path.toString().endsWith(".java"))
+					.filter(path -> contains(path, "com.terraformersmc.modmenu"))
+					.toList();
+			assertTrue(offenders.isEmpty(), () -> "Mod Menu imports found in main sources: " + offenders);
 		}
 	}
 

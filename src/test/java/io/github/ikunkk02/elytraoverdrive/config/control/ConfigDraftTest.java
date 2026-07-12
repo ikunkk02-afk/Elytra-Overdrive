@@ -1,0 +1,46 @@
+package io.github.ikunkk02.elytraoverdrive.config.control;
+
+import io.github.ikunkk02.elytraoverdrive.config.VisualPreset;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class ConfigDraftTest {
+	@Test
+	void unchangedDraftIsCleanAndEditsBecomeDirty() {
+		ConfigDraft draft = new ConfigDraft(ConfigDraft.PlayerSettings.defaults());
+
+		assertFalse(draft.isDirty());
+		draft.playerSelectedMultiplier(5.0);
+		assertTrue(draft.isDirty());
+	}
+
+	@Test
+	void numericValuesClampToSupportedRanges() {
+		ConfigDraft draft = new ConfigDraft(ConfigDraft.PlayerSettings.defaults());
+
+		draft.playerSelectedMultiplier(200.0);
+		draft.fovIntensity(-4.0);
+		assertEquals(20.0, draft.playerSelectedMultiplier());
+		assertEquals(0.0, draft.fovIntensity());
+
+		draft.fovIntensity(9.0);
+		assertEquals(1.5, draft.fovIntensity());
+	}
+
+	@Test
+	void restoreDefaultsTouchesOnlyPlayerOwnedDraftValues() {
+		ConfigDraft.PlayerSettings original = new ConfigDraft.PlayerSettings(
+				7.0, true, false, false, VisualPreset.CINEMATIC,
+				false, false, false, true, 1.5
+		);
+		ConfigDraft draft = new ConfigDraft(original);
+
+		draft.restorePlayerDefaults();
+
+		assertEquals(ConfigDraft.PlayerSettings.defaults(), draft.current());
+		assertTrue(draft.isDirty());
+	}
+}
