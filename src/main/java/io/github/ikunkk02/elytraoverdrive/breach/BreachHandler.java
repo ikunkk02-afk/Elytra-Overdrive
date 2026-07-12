@@ -32,7 +32,7 @@ public final class BreachHandler {
 		ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> resetRuntimeState(newPlayer));
 		ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> resetRuntimeState(player));
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> SESSIONS.clear());
-		ServerTickEvents.END_WORLD_TICK.register(BreachHandler::tickWorld);
+		ServerTickEvents.START_WORLD_TICK.register(BreachHandler::tickWorld);
 	}
 
 	public static void resetRuntimeState(ServerPlayer player) {
@@ -57,25 +57,26 @@ public final class BreachHandler {
 		}
 
 		BreachVector current = bodyCenter(player);
-		if (!session.initialized()) {
-			session.updatePosition(current);
-			return;
-		}
-		BreachVector previous = session.previousPosition();
+		BreachVector previous = session.initialized() ? session.previousPosition() : current;
 		session.updatePosition(current);
 		int maximum = Math.max(1, Math.min(128, ElytraOverdrive.CONFIG.maximumBreachBlocksPerTick()));
+		BreachBreakBudget breakBudget = new BreachBreakBudget(maximum);
 		for (BreachBlockPosition candidate : BreachPathSampler.sample(
 				previous,
 				current,
 				fromVec3(velocity),
-				level,
-				maximum
+				level
 		)) {
+			if (!breakBudget.canAttemptBreak()) {
+				break;
+			}
 			if (!isUsableTrident(player.getMainHandItem())) {
 				session.reset();
 				break;
 			}
-			tryBreak(player, new BlockPos(candidate.x(), candidate.y(), candidate.z()), level);
+			if (tryBreak(player, new BlockPos(candidate.x(), candidate.y(), candidate.z()), level)) {
+				breakBudget.recordSuccessfulBreak();
+			}
 		}
 	}
 

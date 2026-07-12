@@ -16,8 +16,7 @@ class BreachPathSamplerTest {
 				new BreachVector(0.5, 64.5, 0.5),
 				new BreachVector(0.5, 64.5, 5.5),
 				new BreachVector(0.0, 0.0, 1.0),
-				3,
-				128
+				3
 		);
 
 		assertFalse(positions.isEmpty());
@@ -25,16 +24,15 @@ class BreachPathSamplerTest {
 	}
 
 	@Test
-	void sampledPathNeverExceedsConfiguredLimit() {
+	void sampledPathNeverExceedsInternalSafetyLimit() {
 		var positions = BreachPathSampler.sample(
 				new BreachVector(0.5, 64.5, 0.5),
 				new BreachVector(0.5, 64.5, 10_000.5),
 				new BreachVector(0.0, 0.0, 1.0),
-				3,
-				32
+				3
 		);
 
-		assertEquals(32, positions.size());
+		assertEquals(BreachPathSampler.MAX_SCAN_POSITIONS_PER_TICK, positions.size());
 	}
 
 	@Test
@@ -43,8 +41,7 @@ class BreachPathSamplerTest {
 				new BreachVector(0.5, 64.5, 0.5),
 				new BreachVector(0.5, 67.5, 0.5),
 				new BreachVector(0.0, 1.0, 0.0),
-				3,
-				128
+				3
 		);
 
 		assertFalse(positions.isEmpty());
@@ -58,10 +55,46 @@ class BreachPathSamplerTest {
 					new BreachVector(0.5, 64.5, 0.5),
 					new BreachVector(0.5, 64.5, 1.0E150),
 					new BreachVector(0.0, 0.0, 1.0),
-					1,
-					32
+					1
 			);
-			assertTrue(positions.size() <= 32);
+			assertTrue(positions.size() <= BreachPathSampler.MAX_SCAN_POSITIONS_PER_TICK);
 		});
+	}
+
+	@Test
+	void predictivePathExtendsAheadOfCurrentPosition() {
+		var positions = BreachPathSampler.sample(
+				new BreachVector(0.5, 64.5, 0.5),
+				new BreachVector(0.5, 64.5, 1.5),
+				new BreachVector(0.0, 0.0, 2.0),
+				1
+		);
+
+		assertTrue(positions.stream().anyMatch(position -> position.z() >= 5));
+	}
+
+	@Test
+	void lookAheadDistanceIncreasesWithSpeed() {
+		double lowSpeed = BreachPathSampler.calculateLookAheadDistance(0.5);
+		double highSpeed = BreachPathSampler.calculateLookAheadDistance(5.0);
+
+		assertTrue(lowSpeed >= 2.0);
+		assertTrue(highSpeed > lowSpeed);
+		assertTrue(highSpeed <= 12.0);
+	}
+
+	@Test
+	void thickWallCanExposeMultipleDepthLayersInOneTick() {
+		var positions = BreachPathSampler.sample(
+				new BreachVector(0.5, 64.5, 0.5),
+				new BreachVector(0.5, 64.5, 0.5),
+				new BreachVector(0.0, 0.0, 3.0),
+				1
+		);
+
+		for (int depth = 1; depth <= 5; depth++) {
+			int expectedDepth = depth;
+			assertTrue(positions.stream().anyMatch(position -> position.z() == expectedDepth));
+		}
 	}
 }

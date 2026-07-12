@@ -6,7 +6,9 @@ import java.util.List;
 
 public final class BreachPathSampler {
 	public static final double SAMPLE_STEP = 0.35;
-	public static final double FORWARD_BUFFER = 0.75;
+	public static final int MAX_SCAN_POSITIONS_PER_TICK = 1024;
+	private static final double MIN_LOOK_AHEAD_DISTANCE = 2.0;
+	private static final double MAX_LOOK_AHEAD_DISTANCE = 12.0;
 
 	private BreachPathSampler() {
 	}
@@ -14,15 +16,14 @@ public final class BreachPathSampler {
 	public static List<BreachBlockPosition> sample(
 			BreachVector previous,
 			BreachVector current,
-			BreachVector direction,
-			int level,
-			int maximumPositions
+			BreachVector velocity,
+			int level
 	) {
-		if (!previous.isFinite() || !current.isFinite() || maximumPositions <= 0) {
+		if (!previous.isFinite() || !current.isFinite() || !velocity.isFinite()) {
 			return List.of();
 		}
 
-		BreachVector forward = direction.normalizedOrZero();
+		BreachVector forward = velocity.normalizedOrZero();
 		if (forward.equals(BreachVector.ZERO)) {
 			return List.of();
 		}
@@ -35,7 +36,7 @@ public final class BreachPathSampler {
 			return List.of();
 		}
 
-		BreachVector end = current.add(forward.scale(FORWARD_BUFFER));
+		BreachVector end = current.add(forward.scale(calculateLookAheadDistance(velocity.length())));
 		BreachVector segment = end.subtract(previous);
 		double distance = segment.length();
 		if (!Double.isFinite(distance)) {
@@ -45,11 +46,10 @@ public final class BreachPathSampler {
 		if (segmentDirection.equals(BreachVector.ZERO)) {
 			segmentDirection = forward;
 		}
-		int iterationLimit = Math.min(1024, Math.max(8, maximumPositions * 8));
-		int samples = Math.max(1, (int)Math.min(Math.ceil(distance / SAMPLE_STEP), iterationLimit));
-		LinkedHashSet<BreachBlockPosition> positions = new LinkedHashSet<>(Math.min(maximumPositions, 128));
+		int samples = Math.max(1, (int)Math.min(Math.ceil(distance / SAMPLE_STEP), MAX_SCAN_POSITIONS_PER_TICK));
+		LinkedHashSet<BreachBlockPosition> positions = new LinkedHashSet<>(128);
 		List<BreachOffset> offsets = BreachRules.crossSectionOffsets(level);
-		for (int sample = 0; sample <= samples && positions.size() < maximumPositions; sample++) {
+		for (int sample = 0; sample <= samples && positions.size() < MAX_SCAN_POSITIONS_PER_TICK; sample++) {
 			double traveled = Math.min(distance, sample * SAMPLE_STEP);
 			BreachVector center = previous.add(segmentDirection.scale(traveled));
 			for (BreachOffset offset : offsets) {
@@ -61,12 +61,19 @@ public final class BreachPathSampler {
 						floorToInt(candidate.y()),
 						floorToInt(candidate.z())
 				));
-				if (positions.size() >= maximumPositions) {
+				if (positions.size() >= MAX_SCAN_POSITIONS_PER_TICK) {
 					break;
 				}
 			}
 		}
 		return new ArrayList<>(positions);
+	}
+
+	public static double calculateLookAheadDistance(double speed) {
+		if (!Double.isFinite(speed)) {
+			return MIN_LOOK_AHEAD_DISTANCE;
+		}
+		return Math.clamp(1.5 + Math.max(0.0, speed) * 1.5, MIN_LOOK_AHEAD_DISTANCE, MAX_LOOK_AHEAD_DISTANCE);
 	}
 
 	private static int floorToInt(double value) {
