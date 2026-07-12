@@ -14,6 +14,37 @@ class FlightSessionStateTest {
 		assertEquals(1.0, state.selectedMultiplier());
 		assertEquals(1.0, state.effectiveMultiplier(10.0));
 		assertFalse(state.active());
+		assertFalse(state.heldFireworkPreference());
+		assertEquals(FlightActivationSource.NONE, state.activationSource());
+	}
+
+	@Test
+	void heldFireworkPreferenceTracksIntentWithoutGrantingAuthority() {
+		FlightSessionState state = new FlightSessionState();
+
+		state.setHeldFireworkPreference(true);
+
+		assertTrue(state.heldFireworkPreference());
+		assertEquals(FlightActivationSource.NONE, state.activationSource());
+	}
+
+	@Test
+	void expandedConfirmedStateControlsSynchronization() {
+		FlightSessionState state = new FlightSessionState();
+
+		assertTrue(state.needsSynchronization(
+				5.0, false, FlightActivationSource.NONE, false, false, false
+		));
+		state.markSynchronized(5.0, false, FlightActivationSource.NONE, false, false, false);
+		assertFalse(state.needsSynchronization(
+				5.0, false, FlightActivationSource.NONE, false, false, false
+		));
+		assertTrue(state.needsSynchronization(
+				5.0, false, FlightActivationSource.NONE, true, false, false
+		));
+		assertTrue(state.needsSynchronization(
+				5.0, true, FlightActivationSource.HELD_FIREWORK, true, false, true
+		));
 	}
 
 	@Test

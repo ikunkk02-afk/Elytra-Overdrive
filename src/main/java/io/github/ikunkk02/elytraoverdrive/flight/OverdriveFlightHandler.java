@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +42,24 @@ public final class OverdriveFlightHandler {
 
 	public static boolean updateSelectedMultiplier(ServerPlayer player, double multiplier) {
 		FlightSessionState state = SESSIONS.computeIfAbsent(player.getUUID(), ignored -> new FlightSessionState());
-		return state.updateSelectedMultiplier(multiplier);
+		boolean updated = state.updateSelectedMultiplier(multiplier);
+		if (updated) {
+			refreshPlayerPolicy(player, state);
+		}
+		return updated;
+	}
+
+	public static void updateHeldFireworkPreference(ServerPlayer player, boolean enabled) {
+		FlightSessionState state = SESSIONS.computeIfAbsent(player.getUUID(), ignored -> new FlightSessionState());
+		state.setHeldFireworkPreference(enabled);
+		refreshPlayerPolicy(player, state);
+	}
+
+	public static void refreshPolicyForAll(MinecraftServer server) {
+		for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+			FlightSessionState state = SESSIONS.computeIfAbsent(player.getUUID(), ignored -> new FlightSessionState());
+			refreshPlayerPolicy(player, state);
+		}
 	}
 
 	public static void resetRuntimeState(ServerPlayer player) {
@@ -64,7 +82,18 @@ public final class OverdriveFlightHandler {
 	private static void tickPlayer(ServerPlayer player) {
 		FlightSessionState state = SESSIONS.computeIfAbsent(player.getUUID(), ignored -> new FlightSessionState());
 		double effectiveMultiplier = state.effectiveMultiplier(ElytraOverdrive.CONFIG.serverMaximumMultiplier());
-		boolean canActivate = canActivate(player, effectiveMultiplier);
+		ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+		boolean usableElytra = chest.is(Items.ELYTRA) && ElytraItem.isFlyEnabled(chest);
+		FlightActivationSource source = resolveSource(player, state, chest, usableElytra);
+		boolean canActivate = FlightActivationResolver.canActivate(
+				source,
+				ElytraOverdrive.CONFIG.enableHighSpeedFlight(),
+				player.isAlive(),
+				player.isSpectator(),
+				player.isFallFlying(),
+				usableElytra,
+				effectiveMultiplier
+		);
 
 		if (!canActivate) {
 			deactivate(player, state, effectiveMultiplier);
@@ -80,24 +109,55 @@ public final class OverdriveFlightHandler {
 		}
 
 		state.setActive(true);
+		state.setActivationSource(source);
 		if (!tickDurability(player, state, effectiveMultiplier)) {
 			return;
 		}
 		synchronize(player, state, effectiveMultiplier, true);
 	}
 
-	private static boolean canActivate(ServerPlayer player, double effectiveMultiplier) {
-		if (!ElytraOverdrive.CONFIG.enableHighSpeedFlight()
-				|| effectiveMultiplier <= FlightSpeedController.MIN_MULTIPLIER
-				|| player.isSpectator()
-				|| !player.isFallFlying()) {
-			return false;
-		}
+	private static FlightActivationSource resolveSource(
+			ServerPlayer player,
+			FlightSessionState state,
+			ItemStack chest,
+			boolean usableElytra
+	) {
+		return FlightActivationResolver.resolve(
+				usableElytra && OverdriveEnchantments.hasOverdrive(player, chest),
+				state.heldFireworkPreference(),
+				HeldFireworkRules.isHoldingRocket(player.getMainHandItem(), player.getOffhandItem()),
+				serverPolicyAllowsPlayer(player)
+		);
+	}
 
+	private static boolean serverPolicyAllowsPlayer(ServerPlayer player) {
+		return ElytraOverdrive.CONFIG.allowHeldFireworkOverdrive()
+				|| player.server.isSingleplayerOwner(player.getGameProfile());
+	}
+
+	private static void refreshPlayerPolicy(ServerPlayer player, FlightSessionState state) {
+		double effectiveMultiplier = state.effectiveMultiplier(ElytraOverdrive.CONFIG.serverMaximumMultiplier());
 		ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
-		return chest.is(Items.ELYTRA)
-				&& ElytraItem.isFlyEnabled(chest)
-				&& OverdriveEnchantments.hasOverdrive(player, chest);
+		boolean usableElytra = chest.is(Items.ELYTRA) && ElytraItem.isFlyEnabled(chest);
+		FlightActivationSource source = resolveSource(player, state, chest, usableElytra);
+		boolean canRemainActive = FlightActivationResolver.canActivate(
+				source,
+				ElytraOverdrive.CONFIG.enableHighSpeedFlight(),
+				player.isAlive(),
+				player.isSpectator(),
+				player.isFallFlying(),
+				usableElytra,
+				effectiveMultiplier
+		);
+
+		if (state.active() && !canRemainActive) {
+			deactivate(player, state, effectiveMultiplier);
+			return;
+		}
+		if (state.active()) {
+			state.setActivationSource(source);
+		}
+		synchronize(player, state, effectiveMultiplier, state.active());
 	}
 
 	private static boolean tickDurability(ServerPlayer player, FlightSessionState state, double effectiveMultiplier) {
@@ -143,13 +203,38 @@ public final class OverdriveFlightHandler {
 			double effectiveMultiplier,
 			boolean active
 	) {
-		if (!state.needsSynchronization(effectiveMultiplier, active)
+		boolean serverPolicy = ElytraOverdrive.CONFIG.allowHeldFireworkOverdrive();
+		boolean ownerOverride = player.server.isSingleplayerOwner(player.getGameProfile());
+		boolean acceptedPreference = state.heldFireworkPreference() && (serverPolicy || ownerOverride);
+		FlightActivationSource source = active ? state.activationSource() : FlightActivationSource.NONE;
+		if (!state.needsSynchronization(
+				effectiveMultiplier,
+				active,
+				source,
+				serverPolicy,
+				ownerOverride,
+				acceptedPreference
+		)
 				|| !ServerPlayNetworking.canSend(player, OverdriveStateS2CPayload.TYPE)) {
 			return;
 		}
 
-		ServerPlayNetworking.send(player, new OverdriveStateS2CPayload(effectiveMultiplier, active));
-		state.markSynchronized(effectiveMultiplier, active);
+		ServerPlayNetworking.send(player, new OverdriveStateS2CPayload(
+				effectiveMultiplier,
+				active,
+				source.ordinal(),
+				serverPolicy,
+				ownerOverride,
+				acceptedPreference
+		));
+		state.markSynchronized(
+				effectiveMultiplier,
+				active,
+				source,
+				serverPolicy,
+				ownerOverride,
+				acceptedPreference
+		);
 	}
 
 	private static FlightVelocity fromVec3(Vec3 vector) {

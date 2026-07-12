@@ -16,6 +16,10 @@ public final class OverdriveNetworking {
 	public static void initialize() {
 		PayloadTypeRegistry.configurationS2C().register(RequiredClientPayload.TYPE, RequiredClientPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(SelectedMultiplierC2SPayload.TYPE, SelectedMultiplierC2SPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(
+				HeldFireworkPreferenceC2SPayload.TYPE,
+				HeldFireworkPreferenceC2SPayload.CODEC
+		);
 		PayloadTypeRegistry.playC2S().register(StartBombingC2SPayload.TYPE, StartBombingC2SPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(StopBombingC2SPayload.TYPE, StopBombingC2SPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(OverdriveStateS2CPayload.TYPE, OverdriveStateS2CPayload.CODEC);
@@ -40,6 +44,9 @@ public final class OverdriveNetworking {
 				);
 			}
 		});
+		ServerPlayNetworking.registerGlobalReceiver(HeldFireworkPreferenceC2SPayload.TYPE, (payload, context) ->
+				OverdriveFlightHandler.updateHeldFireworkPreference(context.player(), payload.enabled())
+		);
 		ServerPlayNetworking.registerGlobalReceiver(StartBombingC2SPayload.TYPE, (payload, context) ->
 				BombingHandler.start(context.player())
 		);

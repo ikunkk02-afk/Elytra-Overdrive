@@ -47,5 +47,8 @@
   "text.config.elytra-overdrive.option.protectBlockEntitiesFromBreach": "保护方块实体",
   "text.config.elytra-overdrive.option.protectBlockEntitiesFromBreach.tooltip": "防止破阵破坏容器和其他保存数据的方块。",
   "disconnect.elytra_overdrive.client_required": "此服务器要求客户端安装 Elytra Overdrive。",
-  "disconnect.elytra_overdrive.protocol_mismatch": "Elytra Overdrive 网络协议版本不兼容。"
+  "disconnect.elytra_overdrive.protocol_mismatch": "Elytra Overdrive 网络协议版本不兼容。",
+  "command.elytra_overdrive.firework_mode.enabled": "服务器现已允许手持烟花高速模式。",
+  "command.elytra_overdrive.firework_mode.disabled": "服务器现已关闭手持烟花高速模式。",
+  "command.elytra_overdrive.no_permission": "需要管理员权限等级 4 才能修改手持烟花高速模式。"
 }

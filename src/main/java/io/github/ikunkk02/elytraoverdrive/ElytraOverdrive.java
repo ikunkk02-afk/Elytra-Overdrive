@@ -4,6 +4,7 @@ import io.github.ikunkk02.elytraoverdrive.config.OverdriveConfig;
 import io.github.ikunkk02.elytraoverdrive.bombing.BombingHandler;
 import io.github.ikunkk02.elytraoverdrive.breach.BreachHandler;
 import io.github.ikunkk02.elytraoverdrive.flight.OverdriveFlightHandler;
+import io.github.ikunkk02.elytraoverdrive.command.OverdriveCommands;
 import io.github.ikunkk02.elytraoverdrive.network.OverdriveNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,7 @@ public class ElytraOverdrive implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		OverdriveNetworking.initialize();
+		OverdriveCommands.initialize();
 		OverdriveFlightHandler.initialize();
 		BombingHandler.initialize();
 		BreachHandler.initialize();

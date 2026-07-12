@@ -131,6 +131,42 @@ class ResourceContractTest {
 		assertFalse(source.contains("EnchantmentMenu"));
 	}
 
+	@Test
+	void heldFireworkProtocolAndAuthorityRemainServerOwned() throws IOException {
+		Path configModel = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "config", "OverdriveConfigModel.java");
+		Path requiredPayload = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "network", "RequiredClientPayload.java");
+		Path statePayload = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "network", "OverdriveStateS2CPayload.java");
+		Path preferencePayload = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "network", "HeldFireworkPreferenceC2SPayload.java");
+		Path handler = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "flight", "OverdriveFlightHandler.java");
+
+		assertTrue(contains(configModel, "enableHeldFireworkOverdrive = false"));
+		assertTrue(contains(configModel, "allowHeldFireworkOverdrive = false"));
+		assertTrue(contains(requiredPayload, "CURRENT_PROTOCOL = 3"));
+		assertTrue(contains(statePayload, "state_v2"));
+		assertTrue(contains(statePayload, "activationSourceOrdinal"));
+		assertTrue(Files.exists(preferencePayload));
+		assertTrue(contains(handler, "isSingleplayerOwner"));
+		assertTrue(contains(handler, "HeldFireworkRules.isHoldingRocket"));
+		assertFalse(contains(handler, "shrink("));
+	}
+
+	@Test
+	void fireworkModeCommandUsesPermissionFourAndPersistsPolicy() throws IOException {
+		Path command = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "command", "OverdriveCommands.java");
+		assertTrue(Files.exists(command));
+		assertTrue(contains(command, "hasPermission(4)"));
+		assertTrue(contains(command, "allowHeldFireworkOverdrive(enabled)"));
+		assertTrue(contains(command, "CONFIG.save()"));
+		assertTrue(contains(command, "refreshPolicyForAll"));
+
+		for (String language : List.of("en_us", "zh_cn")) {
+			JsonObject translations = readJson(RESOURCES.resolve("assets/elytra-overdrive/lang/" + language + ".json"));
+			assertTrue(translations.has("command.elytra_overdrive.firework_mode.enabled"));
+			assertTrue(translations.has("command.elytra_overdrive.firework_mode.disabled"));
+			assertTrue(translations.has("command.elytra_overdrive.no_permission"));
+		}
+	}
+
 	private static JsonObject readJson(Path path) throws IOException {
 		return JsonParser.parseString(Files.readString(path)).getAsJsonObject();
 	}

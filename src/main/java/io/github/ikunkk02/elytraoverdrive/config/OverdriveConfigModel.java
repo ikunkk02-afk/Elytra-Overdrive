@@ -16,6 +16,8 @@ public class OverdriveConfigModel {
 	@Hook
 	public double playerSelectedMultiplier = 2.0;
 
+	public boolean enableHeldFireworkOverdrive = false;
+
 	public boolean showHighSpeedParticles = true;
 
 	public boolean enableHighSpeedFov = true;
@@ -23,6 +25,9 @@ public class OverdriveConfigModel {
 	@SectionHeader("server")
 	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
 	public boolean enableHighSpeedFlight = true;
+
+	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
+	public boolean allowHeldFireworkOverdrive = false;
 
 	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
 	@RangeConstraint(min = 1.0, max = 20.0, decimalPlaces = 1)

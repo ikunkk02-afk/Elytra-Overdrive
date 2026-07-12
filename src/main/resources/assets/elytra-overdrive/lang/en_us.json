@@ -47,5 +47,8 @@
   "text.config.elytra-overdrive.option.protectBlockEntitiesFromBreach": "Protect Block Entities",
   "text.config.elytra-overdrive.option.protectBlockEntitiesFromBreach.tooltip": "Prevents Breach from breaking containers and other blocks that store data.",
   "disconnect.elytra_overdrive.client_required": "Elytra Overdrive is required on the client to join this server.",
-  "disconnect.elytra_overdrive.protocol_mismatch": "Incompatible Elytra Overdrive network protocol."
+  "disconnect.elytra_overdrive.protocol_mismatch": "Incompatible Elytra Overdrive network protocol.",
+  "command.elytra_overdrive.firework_mode.enabled": "Held-firework Overdrive is now allowed by this server.",
+  "command.elytra_overdrive.firework_mode.disabled": "Held-firework Overdrive is now disabled by this server.",
+  "command.elytra_overdrive.no_permission": "You need administrator permission level 4 to change held-firework Overdrive."
 }
