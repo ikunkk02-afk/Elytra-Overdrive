@@ -193,6 +193,27 @@ class ResourceContractTest {
 		}
 	}
 
+	@Test
+	void flightVisualsUseBoundedClientDustAndConfigurableFov() throws IOException {
+		Path configModel = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "config", "OverdriveConfigModel.java");
+		Path visuals = Path.of("src", "client", "java", "io", "github", "ikunkk02", "elytraoverdrive", "client", "OverdriveVisuals.java");
+		Path clientState = Path.of("src", "client", "java", "io", "github", "ikunkk02", "elytraoverdrive", "client", "ClientOverdriveState.java");
+
+		for (String field : List.of(
+				"visualPreset", "enableWingtipTrails", "enableSpeedLines",
+				"enableSonicBoomRing", "reduceMotion", "fovIntensity"
+		)) {
+			assertTrue(contains(configModel, field));
+		}
+		assertTrue(contains(visuals, "DustColorTransitionOptions"));
+		assertTrue(contains(visuals, "SonicBoomState"));
+		assertTrue(contains(visuals, "particleBudget"));
+		assertFalse(contains(visuals, "ParticleTypes.CLOUD"));
+		assertFalse(contains(visuals, "ServerPlayNetworking"));
+		assertTrue(contains(clientState, "scaledFovFactor"));
+		assertTrue(contains(clientState, "fovIntensity"));
+	}
+
 	private static JsonObject readJson(Path path) throws IOException {
 		return JsonParser.parseString(Files.readString(path)).getAsJsonObject();
 	}
