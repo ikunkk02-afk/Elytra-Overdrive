@@ -38,7 +38,9 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	annotationProcessor modImplementation("io.wispforest:owo-lib:${project.owo_version}")
-	modLocalRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
+	if (System.getenv("CI") == null) {
+		modLocalRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
+	}
 
 	testImplementation platform("org.junit:junit-bom:5.11.4")
 	testImplementation "org.junit.jupiter:junit-jupiter"
