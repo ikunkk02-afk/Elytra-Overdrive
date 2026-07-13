@@ -33,10 +33,9 @@ Elytra Overdrive 面向 Minecraft 1.21.1、Fabric Loader 0.19.3、Java 21 和 Mo
 
 - `client/ElytraOverdriveClient`：客户端网络与视觉初始化。
 - `client/ClientOverdriveNetworking`：协议检查、倍率发送和服务端状态接收。
-- `client/ClientOverdriveState`：仅保存服务端确认的视觉状态与平滑 FOV 值。
-- `client/OverdriveVisuals`：本地、限量的云粒子和 FOV tick。
+- `client/ClientOverdriveState`：仅保存服务端确认的视觉状态。
+- `client/OverdriveVisuals`：本地、限量的高速粒子 tick。
 - `client/mixin/ClientCommonPacketListenerImplAccessor`：协议不兼容时取得配置连接并断开。
-- `client/mixin/GameRendererMixin`：在 `GameRenderer#getFov` 返回点叠加瞬时 FOV。
 
 ### 数据与测试
 
@@ -66,7 +65,7 @@ Minecraft 1.21.1 没有后续版本的 `DataComponents.ENCHANTABLE`。`ItemStack
 
 owo 配置模型分为玩家与服务器两组：
 
-- 玩家：倍率默认 `2.0`、粒子默认开启、FOV 默认开启。
+- 玩家：倍率默认 `2.0`、粒子默认开启。
 - 服务器：高速总开关默认开启、最大倍率默认 `10.0`、额外耐久默认开启、间隔默认 `40 tick`。
 - 鞘翅附魔台：附魔能力默认 `10`，范围 `1–30`，由服务器同步。
 
@@ -94,7 +93,6 @@ acceleration = min(0.04 × (finalMultiplier - 1), 0.8) blocks/tick²
 ## Mixin 注入点
 
 - 服务端只有 `ServerGamePacketListenerImpl#teleport(double, double, double, float, float, Set<RelativeMovement>)` 的 `HEAD` 注入。传送是清除运行状态的明确边界；仅在传送前确实处于超载激活状态时归零速度，因此不会改变普通玩家的原版传送行为，普通移动逻辑也不被覆盖。
-- 客户端只有 `GameRenderer#getFov(Camera, float, boolean)` 的 `RETURN` 注入。它在原版结果上叠加最多 15° 的平滑瞬时偏移，不写入或永久修改玩家 FOV 选项。
 
 ## 临时状态与耐久
 
@@ -106,7 +104,7 @@ acceleration = min(0.04 × (finalMultiplier - 1), 0.8) blocks/tick²
 
 粒子只在本地当前玩家、服务端确认激活、倍率大于 1 且速度超过 `0.9 blocks/tick` 时出现。每 4 tick 最多生成 2 个原版云粒子，不由服务端全局广播。
 
-FOV 仅对当前客户端生效，按每 tick 15% 向目标值平滑过渡，最高额外 15°。关闭选项或停止高速后目标回到零，不修改持久设置。所有 Screen、渲染、粒子和客户端网络代码都位于 client source set。
+所有 Screen、渲染、粒子和客户端网络代码都位于 client source set。
 
 ## 已运行的自动验证
 
@@ -129,7 +127,7 @@ FOV 仅对当前客户端生效，按每 tick 15% 向目标值平滑过渡，最
 5. 倍率为 10.0 时不会无限加速或产生 NaN。
 6. 卸下鞘翅后功能立即停止。
 7. 鞘翅损坏后功能停止。
-8. 停止滑翔后 FOV 平滑恢复。
+8. 停止滑翔后高速粒子立即停止。
 9. 重新进入世界后配置仍然存在。
 10. 没有 Mod Menu 时模组仍能启动。
 11. 专用服务器不会加载客户端类。
@@ -147,6 +145,6 @@ FOV 仅对当前客户端生效，按每 tick 15% 向目标值平滑过渡，最
 ## 已知限制与尚未实现
 
 - 自动测试只覆盖纯 Java 数值与资源契约，无法在普通 JUnit 中模拟完整 `ServerPlayer` 飞行。
-- FOV 和粒子只表示当前本地玩家的服务端确认状态，附近其他玩家不会看到这条粒子尾迹。
+- 粒子只表示当前本地玩家的服务端确认状态，附近其他玩家不会看到这条粒子尾迹。
 - 当前网络协议要求客户端和服务端都安装本模组，不提供 vanilla 客户端兼容模式。
 - TNT 空中轰炸与三叉戟破阵已在后续阶段实现；自定义音效、音爆、镜头震动、自定义模型和贴图仍不在当前范围。

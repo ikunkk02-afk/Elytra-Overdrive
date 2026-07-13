@@ -41,7 +41,7 @@ class VisualIntensityTest {
 	}
 
 	@Test
-	void reduceMotionSuppressesDynamicEffectsAndFov() {
+	void reduceMotionSuppressesDynamicParticleEffects() {
 		VisualIntensity normal = VisualIntensity.fromSpeed(
 				5.0, 5.0, true, VisualPreset.CINEMATIC, false
 		);
@@ -52,8 +52,6 @@ class VisualIntensityTest {
 		assertEquals(0, reduced.speedLineCount());
 		assertFalse(reduced.sonicRingAllowed());
 		assertTrue(reduced.particleBudget() < normal.particleBudget());
-		assertTrue(reduced.scaledFovFactor(1.0) < normal.scaledFovFactor(1.0));
-		assertEquals(0.0, normal.scaledFovFactor(0.0));
 	}
 
 	@Test

@@ -60,14 +60,14 @@ player.server.isSingleplayerOwner(player.getGameProfile())
 enableHeldFireworkOverdrive=false
 ```
 
-新服务端 `FlightSessionState` 的偏好始终从 false 开始。客户端在 JOIN 后发送一次保存的偏好，并在控制终端保存时再次发送。断开连接会清理客户端策略、来源、有效倍率和 FOV 状态；服务端断开会移除会话。
+新服务端 `FlightSessionState` 的偏好始终从 false 开始。客户端在 JOIN 后发送一次保存的偏好，并在控制终端保存时再次发送。断开连接会清理客户端策略、来源和有效倍率；服务端断开会移除会话。
 
 本地配置可以保留 true，但服务器拒绝时：
 
 - `acceptedHeldFireworkPreference=false`；
 - 来源不能成为 `HELD_FIREWORK`；
 - UI 开关锁定；
-- 粒子和 FOV 不运行。
+- 粒子不运行。
 
 ## 网络 Payload 与协议
 

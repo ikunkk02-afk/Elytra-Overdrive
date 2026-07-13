@@ -9,10 +9,9 @@ public record VisualIntensity(
 		double wingtipLength,
 		int speedLineCount,
 		int speedLinePoints,
-		boolean sonicRingAllowed,
-		double fovFactor
+		boolean sonicRingAllowed
 ) {
-	public static final VisualIntensity ZERO = new VisualIntensity(0.0, 0, 0, 0.0, 0, 0, false, 0.0);
+	public static final VisualIntensity ZERO = new VisualIntensity(0.0, 0, 0, 0.0, 0, 0, false);
 
 	public static VisualIntensity fromSpeed(
 			double actualSpeed,
@@ -45,14 +44,12 @@ public record VisualIntensity(
 		};
 		int linePoints = preset == VisualPreset.CINEMATIC ? 4 : 3;
 		boolean ring = preset != VisualPreset.PERFORMANCE;
-		double fov = preset.fovFactor();
 
 		if (reduceMotion) {
 			wingtipPoints = Math.min(1, wingtipPoints);
 			speedLines = 0;
 			linePoints = 0;
 			ring = false;
-			fov *= 0.35;
 			limit = Math.min(limit, 6);
 		}
 
@@ -65,13 +62,8 @@ public record VisualIntensity(
 				0.35 + intensity * (preset == VisualPreset.CINEMATIC ? 1.35 : 0.9),
 				speedLines,
 				linePoints,
-				ring,
-				fov
+				ring
 		);
-	}
-
-	public double scaledFovFactor(double intensity) {
-		return this.fovFactor * clamp(intensity, 0.0, 1.5);
 	}
 
 	private static double clamp(double value, double minimum, double maximum) {

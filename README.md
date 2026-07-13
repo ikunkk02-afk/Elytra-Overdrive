@@ -94,9 +94,8 @@ Client-side flight feedback includes:
 - Wingtip Trails
 - Speed Lines
 - Sonic Boom Ring
-- Dynamic FOV
 
-The `Performance`, `Balanced`, and `Cinematic` presets apply hard particle limits and different FOV factors. Individual effects can be disabled, and Reduce Motion lowers particle and FOV intensity. Visual settings never change the server's speed calculation.
+The `Performance`, `Balanced`, and `Cinematic` presets apply different hard particle limits. Individual effects can be disabled, and Reduce Motion lowers particle activity while disabling speed lines and the sonic ring. Visual settings never change the server's speed calculation.
 
 ### Aerospace Control Terminal
 
@@ -210,13 +209,11 @@ The configuration file is `config/elytra-overdrive.json5`. Player settings are e
 | `enableHeldFireworkOverdrive` | `false` | Personal request to use held-firework high-speed flight. |
 | `enableExperimentalExtremeSpeed` | `false` | Unlocks the warned `100×–200×` local UI range; this never grants server authority. |
 | `showHighSpeedParticles` | `true` | Master switch for local high-speed particles. |
-| `enableHighSpeedFov` | `true` | Enables the local dynamic FOV effect. |
-| `visualPreset` | `BALANCED` | Particle budget and FOV preset: `PERFORMANCE`, `BALANCED`, or `CINEMATIC`. |
+| `visualPreset` | `BALANCED` | Particle budget preset: `PERFORMANCE`, `BALANCED`, or `CINEMATIC`. |
 | `enableWingtipTrails` | `true` | Shows wingtip trails while confirmed high-speed flight is active. |
 | `enableSpeedLines` | `true` | Shows peripheral speed lines when permitted by the selected preset. |
 | `enableSonicBoomRing` | `true` | Enables the threshold-based sonic boom ring when permitted by the preset. |
-| `reduceMotion` | `false` | Reduces particle motion and FOV intensity and disables speed lines and the sonic ring. |
-| `fovIntensity` | `1.0` | Additional FOV intensity; allowed range `0.0–1.5`. |
+| `reduceMotion` | `false` | Reduces particle motion and disables speed lines and the sonic ring. |
 
 ### Server Flight Settings
 
@@ -379,7 +376,7 @@ On Linux/macOS, replace `.\gradlew.bat` with `./gradlew`.
 | Path | Purpose |
 |---|---|
 | `src/main/java` | Common and server-authoritative gameplay, networking, configuration, commands, and mixins |
-| `src/client/java` | Client UI, input, particles, visual state, and FOV logic |
+| `src/client/java` | Client UI, input, particles, and visual state |
 | `src/main/resources` | Fabric metadata, data-driven enchantments, tags, mixin configs, icon, and translations |
 | `src/client/resources` | Client-only mixin configuration |
 | `src/test/java` | Pure logic and resource-contract unit tests |

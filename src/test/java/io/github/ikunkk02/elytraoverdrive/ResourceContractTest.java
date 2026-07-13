@@ -213,14 +213,18 @@ class ResourceContractTest {
 	}
 
 	@Test
-	void flightVisualsUseBoundedClientDustAndConfigurableFov() throws IOException {
+	void flightVisualsStayBoundedWithoutAnyFovModification() throws IOException {
 		Path configModel = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "config", "OverdriveConfigModel.java");
 		Path visuals = Path.of("src", "client", "java", "io", "github", "ikunkk02", "elytraoverdrive", "client", "OverdriveVisuals.java");
-		Path clientState = Path.of("src", "client", "java", "io", "github", "ikunkk02", "elytraoverdrive", "client", "ClientOverdriveState.java");
+		Path visualPreset = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "config", "VisualPreset.java");
+		Path visualIntensity = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "visual", "VisualIntensity.java");
+		Path clientMixinConfig = Path.of("src", "client", "resources", "elytra-overdrive.client.mixins.json");
+		Path gameRendererMixin = Path.of("src", "client", "java", "io", "github", "ikunkk02", "elytraoverdrive", "client", "mixin", "GameRendererMixin.java");
+		Path fovBoostCalculator = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "visual", "FovBoostCalculator.java");
 
 		for (String field : List.of(
 				"visualPreset", "enableWingtipTrails", "enableSpeedLines",
-				"enableSonicBoomRing", "reduceMotion", "fovIntensity"
+				"enableSonicBoomRing", "reduceMotion"
 		)) {
 			assertTrue(contains(configModel, field));
 		}
@@ -229,8 +233,24 @@ class ResourceContractTest {
 		assertTrue(contains(visuals, "particleBudget"));
 		assertFalse(contains(visuals, "ParticleTypes.CLOUD"));
 		assertFalse(contains(visuals, "ServerPlayNetworking"));
-		assertTrue(contains(clientState, "scaledFovFactor"));
-		assertTrue(contains(clientState, "fovIntensity"));
+		assertTrue(contains(visualPreset, "particleLimit"));
+		assertTrue(contains(visualIntensity, "reduceMotion"));
+		assertFalse(contains(clientMixinConfig, "GameRendererMixin"));
+		assertFalse(Files.exists(gameRendererMixin));
+		assertFalse(Files.exists(fovBoostCalculator));
+
+		for (Path sourceRoot : List.of(Path.of("src", "main", "java"), Path.of("src", "client", "java"))) {
+			try (var files = Files.walk(sourceRoot)) {
+				List<Path> offenders = files
+						.filter(path -> path.toString().endsWith(".java"))
+						.filter(path -> List.of(
+								"getFov", "tickFov", "interpolatedFovBoost",
+								"enableHighSpeedFov", "fovIntensity"
+						).stream().anyMatch(needle -> contains(path, needle)))
+						.toList();
+				assertTrue(offenders.isEmpty(), () -> "FOV modification sources found: " + offenders);
+			}
+		}
 	}
 
 	private static JsonObject readJson(Path path) throws IOException {

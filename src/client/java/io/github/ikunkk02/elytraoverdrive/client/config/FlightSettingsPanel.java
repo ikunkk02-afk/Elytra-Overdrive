@@ -104,13 +104,6 @@ public final class FlightSettingsPanel {
 		}
 		panel.child(experimentalCard);
 
-		panel.child(ControlPanelComponents.toggle(
-				"screen.elytra_overdrive.flight.fov",
-				draft.enableHighSpeedFov(),
-				true,
-				draft::enableHighSpeedFov
-		));
-
 		ConfigPermissionState permission = ConfigPermissionState.from(
 				ClientOverdriveState.serverAllowsHeldFirework(),
 				ClientOverdriveState.localOwnerOverride()

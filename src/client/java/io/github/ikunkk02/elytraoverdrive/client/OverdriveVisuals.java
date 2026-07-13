@@ -31,7 +31,6 @@ public final class OverdriveVisuals {
 
 	private static void tick(Minecraft client) {
 		if (client.player == null || client.level == null) {
-			ClientOverdriveState.tickFov(0.0, false, 0.0, VisualPreset.BALANCED, false);
 			SONIC_BOOM.reset();
 			return;
 		}
@@ -39,13 +38,6 @@ public final class OverdriveVisuals {
 		double speed = client.player.getDeltaMovement().length();
 		VisualPreset preset = ElytraOverdrive.CONFIG.visualPreset();
 		boolean reduceMotion = ElytraOverdrive.CONFIG.reduceMotion();
-		ClientOverdriveState.tickFov(
-				speed,
-				ElytraOverdrive.CONFIG.enableHighSpeedFov(),
-				ElytraOverdrive.CONFIG.fovIntensity(),
-				preset,
-				reduceMotion
-		);
 
 		boolean confirmedActive = ClientOverdriveState.active()
 				&& ClientOverdriveState.activationSource() != FlightActivationSource.NONE;

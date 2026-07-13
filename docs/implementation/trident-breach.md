@@ -71,4 +71,4 @@ damageCost = max(1, ceil(blockHardness × breachDurabilityMultiplier))
 2. 普通鞘翅达到速度后可以破阵。
 3. Overdrive 鞘翅可以高速轰炸。
 4. Overdrive 鞘翅可以高速破阵。
-5. 原有 Overdrive 飞行、FOV、粒子和耐久逻辑完全正常。
+5. 原有 Overdrive 飞行、粒子和耐久逻辑完全正常。

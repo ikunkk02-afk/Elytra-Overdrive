@@ -22,19 +22,14 @@ class ConfigDraftTest {
 		ConfigDraft draft = new ConfigDraft(ConfigDraft.PlayerSettings.defaults());
 
 		draft.playerSelectedMultiplier(200.0);
-		draft.fovIntensity(-4.0);
 		assertEquals(200.0, draft.playerSelectedMultiplier());
-		assertEquals(0.0, draft.fovIntensity());
-
-		draft.fovIntensity(9.0);
-		assertEquals(1.5, draft.fovIntensity());
 	}
 
 	@Test
 	void restoreDefaultsTouchesOnlyPlayerOwnedDraftValues() {
 		ConfigDraft.PlayerSettings original = new ConfigDraft.PlayerSettings(
-				7.0, true, true, false, false, VisualPreset.CINEMATIC,
-				false, false, false, true, 1.5
+				7.0, true, true, false, VisualPreset.CINEMATIC,
+				false, false, false, true
 		);
 		ConfigDraft draft = new ConfigDraft(original);
 

@@ -20,8 +20,6 @@ public class OverdriveConfigModel {
 
 	public boolean showHighSpeedParticles = true;
 
-	public boolean enableHighSpeedFov = true;
-
 	public VisualPreset visualPreset = VisualPreset.BALANCED;
 
 	public boolean enableWingtipTrails = true;
@@ -31,9 +29,6 @@ public class OverdriveConfigModel {
 	public boolean enableSonicBoomRing = true;
 
 	public boolean reduceMotion = false;
-
-	@RangeConstraint(min = 0.0, max = 1.5, decimalPlaces = 2)
-	public double fovIntensity = 1.0;
 
 	@SectionHeader("server")
 	@Sync(Option.SyncMode.OVERRIDE_CLIENT)

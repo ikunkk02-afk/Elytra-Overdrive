@@ -10,13 +10,11 @@ public final class ConfigDraft {
 	private boolean enableHeldFireworkOverdrive;
 	private boolean enableExperimentalExtremeSpeed;
 	private boolean showHighSpeedParticles;
-	private boolean enableHighSpeedFov;
 	private VisualPreset visualPreset;
 	private boolean enableWingtipTrails;
 	private boolean enableSpeedLines;
 	private boolean enableSonicBoomRing;
 	private boolean reduceMotion;
-	private double fovIntensity;
 
 	public ConfigDraft(PlayerSettings settings) {
 		this.original = settings;
@@ -29,13 +27,11 @@ public final class ConfigDraft {
 				config.enableHeldFireworkOverdrive(),
 				config.enableExperimentalExtremeSpeed(),
 				config.showHighSpeedParticles(),
-				config.enableHighSpeedFov(),
 				config.visualPreset(),
 				config.enableWingtipTrails(),
 				config.enableSpeedLines(),
 				config.enableSonicBoomRing(),
-				config.reduceMotion(),
-				config.fovIntensity()
+				config.reduceMotion()
 		));
 	}
 
@@ -45,13 +41,11 @@ public final class ConfigDraft {
 				this.enableHeldFireworkOverdrive,
 				this.enableExperimentalExtremeSpeed,
 				this.showHighSpeedParticles,
-				this.enableHighSpeedFov,
 				this.visualPreset,
 				this.enableWingtipTrails,
 				this.enableSpeedLines,
 				this.enableSonicBoomRing,
-				this.reduceMotion,
-				this.fovIntensity
+				this.reduceMotion
 		);
 	}
 
@@ -69,13 +63,11 @@ public final class ConfigDraft {
 		config.enableHeldFireworkOverdrive(settings.enableHeldFireworkOverdrive());
 		config.enableExperimentalExtremeSpeed(settings.enableExperimentalExtremeSpeed());
 		config.showHighSpeedParticles(settings.showHighSpeedParticles());
-		config.enableHighSpeedFov(settings.enableHighSpeedFov());
 		config.visualPreset(settings.visualPreset());
 		config.enableWingtipTrails(settings.enableWingtipTrails());
 		config.enableSpeedLines(settings.enableSpeedLines());
 		config.enableSonicBoomRing(settings.enableSonicBoomRing());
 		config.reduceMotion(settings.reduceMotion());
-		config.fovIntensity(settings.fovIntensity());
 		config.save();
 		this.original = settings;
 	}
@@ -92,13 +84,11 @@ public final class ConfigDraft {
 			this.playerSelectedMultiplier = ExperimentalSpeedRules.selectionAfterDisable(this.playerSelectedMultiplier);
 		}
 		this.showHighSpeedParticles = settings.showHighSpeedParticles();
-		this.enableHighSpeedFov = settings.enableHighSpeedFov();
 		this.visualPreset = settings.visualPreset() == null ? VisualPreset.BALANCED : settings.visualPreset();
 		this.enableWingtipTrails = settings.enableWingtipTrails();
 		this.enableSpeedLines = settings.enableSpeedLines();
 		this.enableSonicBoomRing = settings.enableSonicBoomRing();
 		this.reduceMotion = settings.reduceMotion();
-		this.fovIntensity = clamp(settings.fovIntensity(), 0.0, 1.5);
 	}
 
 	private static double clamp(double value, double minimum, double maximum) {
@@ -122,8 +112,6 @@ public final class ConfigDraft {
 	}
 	public boolean showHighSpeedParticles() { return this.showHighSpeedParticles; }
 	public void showHighSpeedParticles(boolean value) { this.showHighSpeedParticles = value; }
-	public boolean enableHighSpeedFov() { return this.enableHighSpeedFov; }
-	public void enableHighSpeedFov(boolean value) { this.enableHighSpeedFov = value; }
 	public VisualPreset visualPreset() { return this.visualPreset; }
 	public void visualPreset(VisualPreset value) { this.visualPreset = value == null ? VisualPreset.BALANCED : value; }
 	public boolean enableWingtipTrails() { return this.enableWingtipTrails; }
@@ -134,26 +122,22 @@ public final class ConfigDraft {
 	public void enableSonicBoomRing(boolean value) { this.enableSonicBoomRing = value; }
 	public boolean reduceMotion() { return this.reduceMotion; }
 	public void reduceMotion(boolean value) { this.reduceMotion = value; }
-	public double fovIntensity() { return this.fovIntensity; }
-	public void fovIntensity(double value) { this.fovIntensity = clamp(value, 0.0, 1.5); }
 
 	public record PlayerSettings(
 			double playerSelectedMultiplier,
 			boolean enableHeldFireworkOverdrive,
 			boolean enableExperimentalExtremeSpeed,
 			boolean showHighSpeedParticles,
-			boolean enableHighSpeedFov,
 			VisualPreset visualPreset,
 			boolean enableWingtipTrails,
 			boolean enableSpeedLines,
 			boolean enableSonicBoomRing,
-			boolean reduceMotion,
-			double fovIntensity
+			boolean reduceMotion
 	) {
 		public static PlayerSettings defaults() {
 			return new PlayerSettings(
-					2.0, false, false, true, true, VisualPreset.BALANCED,
-					true, true, true, false, 1.0
+					2.0, false, false, true, VisualPreset.BALANCED,
+					true, true, true, false
 			);
 		}
 	}

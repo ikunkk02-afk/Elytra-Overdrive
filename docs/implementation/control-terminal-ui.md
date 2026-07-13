@@ -15,10 +15,10 @@ owo-lib 的可选 Mod Menu 插件读取这个 Provider。项目不导入 Mod Men
 - `OverdriveControlScreen`：Screen 生命周期、响应式外壳、保存/默认/退出确认。
 - `ControlTerminalTheme`：深蓝黑背景、面板、边框、青蓝和橙色常量。
 - `ControlPanelComponents`：通用卡片、行、标签、按钮和开关。
-- `FlightSettingsPanel`：倍率、FOV、烟花个人开关和来源状态。
+- `FlightSettingsPanel`：倍率、烟花个人开关和来源状态。
 - `BombingSettingsPanel`：只读轰炸规则和 SAFE/ARMED 本地装备提示。
 - `BreachSettingsPanel`：只读破阵规则与方块实体保护强调。
-- `VisualSettingsPanel`：视觉预设、三个效果开关、减少动态效果和 FOV 强度。
+- `VisualSettingsPanel`：视觉预设、三个效果开关和减少动态效果。
 - `ServerPolicyPanel`：只读服务端规则和连接角色。
 - `FlightStatusPanel`：服务端确认状态与本地只读速度/耐久。
 
@@ -36,7 +36,7 @@ owo-lib 的可选 Mod Menu 插件读取这个 Provider。项目不导入 Mod Men
 
 保存时：
 
-1. 倍率裁剪到 `1.0–20.0`，FOV 强度裁剪到 `0.0–1.5`。
+1. 倍率裁剪到 `1.0–200.0`。
 2. 只调用玩家字段的生成 setter。
 3. 调用 `OverdriveConfig.save()`。
 4. 发送一次倍率和烟花偏好。
