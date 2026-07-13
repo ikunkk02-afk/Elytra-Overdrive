@@ -3,7 +3,7 @@
 	"id": "elytra-overdrive",
 	"version": "${version}",
 	"name": "Elytra Overdrive",
-	"description": "Adds a configurable high-speed enchantment for the vanilla elytra.",
+	"description": "Expands vanilla Elytra gameplay with high-speed flight, aerial bombing, trident breaching, advanced controls, and configurable visuals.",
 	"authors": [
 		"寿云"
 	],
