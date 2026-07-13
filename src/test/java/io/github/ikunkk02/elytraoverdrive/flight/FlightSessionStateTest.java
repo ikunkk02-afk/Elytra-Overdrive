@@ -54,16 +54,17 @@ class FlightSessionStateTest {
 
 		assertFalse(state.updateSelectedMultiplier(Double.NaN));
 		assertFalse(state.updateSelectedMultiplier(Double.POSITIVE_INFINITY));
-		assertFalse(state.updateSelectedMultiplier(21.0));
+		assertFalse(state.updateSelectedMultiplier(201.0));
 		assertEquals(4.0, state.selectedMultiplier());
 	}
 
 	@Test
 	void serverMaximumCapsEffectiveMultiplier() {
 		FlightSessionState state = new FlightSessionState();
-		assertTrue(state.updateSelectedMultiplier(20.0));
+		assertTrue(state.updateSelectedMultiplier(200.0));
 
-		assertEquals(5.0, state.effectiveMultiplier(5.0));
+		assertEquals(100.0, state.effectiveMultiplier(100.0));
+		assertEquals(200.0, state.effectiveMultiplier(200.0));
 	}
 
 	@Test

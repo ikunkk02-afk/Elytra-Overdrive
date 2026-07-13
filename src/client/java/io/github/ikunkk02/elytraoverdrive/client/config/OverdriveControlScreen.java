@@ -135,12 +135,19 @@ public final class OverdriveControlScreen extends BaseOwoScreen<FlowLayout> {
 
 	private FlowLayout buildSelectedPanel() {
 		return switch (this.state.selected()) {
-			case FLIGHT -> FlightSettingsPanel.build(this.draft);
+			case FLIGHT -> FlightSettingsPanel.build(this.draft, this::showExperimentalWarning, this::rebuild);
 			case BOMBING -> BombingSettingsPanel.build();
 			case BREACH -> BreachSettingsPanel.build();
 			case VISUAL -> VisualSettingsPanel.build(this.draft, this::rebuild);
 			case SERVER -> ServerPolicyPanel.build();
 		};
+	}
+
+	private void showExperimentalWarning() {
+		Minecraft.getInstance().setScreen(new ExperimentalSpeedWarningScreen(this, () -> {
+			this.draft.enableExperimentalExtremeSpeed(true);
+			rebuild();
+		}));
 	}
 
 	private FlowLayout buildFooter() {

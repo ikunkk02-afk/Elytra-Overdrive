@@ -4,7 +4,8 @@ import java.util.OptionalDouble;
 
 public final class FlightSpeedController {
 	public static final double MIN_MULTIPLIER = 1.0;
-	public static final double MAX_MULTIPLIER = 20.0;
+	public static final double STANDARD_MAX_MULTIPLIER = 100.0;
+	public static final double MAX_MULTIPLIER = 200.0;
 	public static final double TARGET_SPEED_PER_MULTIPLIER = 0.8;
 	public static final double ACCELERATION_PER_MULTIPLIER = 0.04;
 	public static final double MAX_ACCELERATION_PER_TICK = 0.8;

@@ -32,6 +32,15 @@ class VisualIntensityTest {
 	}
 
 	@Test
+	void experimentalMaximumStillUsesExistingParticleHardCaps() {
+		for (VisualPreset preset : VisualPreset.values()) {
+			VisualIntensity intensity = VisualIntensity.fromSpeed(160.0, 200.0, true, preset, false);
+			assertTrue(intensity.particleBudget() <= preset.particleLimit());
+			assertTrue(intensity.normalized() <= 1.0);
+		}
+	}
+
+	@Test
 	void reduceMotionSuppressesDynamicEffectsAndFov() {
 		VisualIntensity normal = VisualIntensity.fromSpeed(
 				5.0, 5.0, true, VisualPreset.CINEMATIC, false

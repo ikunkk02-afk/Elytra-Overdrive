@@ -2,10 +2,20 @@ package io.github.ikunkk02.elytraoverdrive.visual;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SonicBoomStateTest {
+	@Test
+	void sustainedExtremeSpeedNeverRetriggersEveryTick() {
+		SonicBoomState state = new SonicBoomState(4.0, 3.2, 60);
+		int triggers = 0;
+		for (int tick = 0; tick < 240; tick++) {
+			if (state.tick(160.0, true, true)) triggers++;
+		}
+		assertEquals(1, triggers);
+	}
 	@Test
 	void firstThresholdCrossingTriggersOnlyOnce() {
 		SonicBoomState state = new SonicBoomState(4.0, 3.2, 60);

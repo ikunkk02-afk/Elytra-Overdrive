@@ -10,11 +10,13 @@ import io.wispforest.owo.config.annotation.Sync;
 @Config(name = "elytra-overdrive", wrapperName = "OverdriveConfig")
 public class OverdriveConfigModel {
 	@SectionHeader("player")
-	@RangeConstraint(min = 1.0, max = 20.0, decimalPlaces = 1)
+	@RangeConstraint(min = 1.0, max = 200.0, decimalPlaces = 1)
 	@Hook
 	public double playerSelectedMultiplier = 2.0;
 
 	public boolean enableHeldFireworkOverdrive = false;
+
+	public boolean enableExperimentalExtremeSpeed = false;
 
 	public boolean showHighSpeedParticles = true;
 
@@ -41,8 +43,8 @@ public class OverdriveConfigModel {
 	public boolean allowHeldFireworkOverdrive = false;
 
 	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
-	@RangeConstraint(min = 1.0, max = 20.0, decimalPlaces = 1)
-	public double serverMaximumMultiplier = 10.0;
+	@RangeConstraint(min = 1.0, max = 200.0, decimalPlaces = 1)
+	public double serverMaximumMultiplier = 100.0;
 
 	@Sync(Option.SyncMode.OVERRIDE_CLIENT)
 	public boolean extraDurabilityDamage = true;

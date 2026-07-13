@@ -20,7 +20,11 @@ public final class ControlTerminalTheme {
 	}
 
 	public static Surface panel() {
-		return Surface.flat(PANEL).and(Surface.outline(BORDER));
+		return panel(BORDER);
+	}
+
+	public static Surface panel(int borderColor) {
+		return Surface.flat(PANEL).and(Surface.outline(borderColor));
 	}
 
 	public static Surface selectedPanel() {

@@ -23,7 +23,7 @@ class ConfigDraftTest {
 
 		draft.playerSelectedMultiplier(200.0);
 		draft.fovIntensity(-4.0);
-		assertEquals(20.0, draft.playerSelectedMultiplier());
+		assertEquals(200.0, draft.playerSelectedMultiplier());
 		assertEquals(0.0, draft.fovIntensity());
 
 		draft.fovIntensity(9.0);
@@ -33,7 +33,7 @@ class ConfigDraftTest {
 	@Test
 	void restoreDefaultsTouchesOnlyPlayerOwnedDraftValues() {
 		ConfigDraft.PlayerSettings original = new ConfigDraft.PlayerSettings(
-				7.0, true, false, false, VisualPreset.CINEMATIC,
+				7.0, true, true, false, false, VisualPreset.CINEMATIC,
 				false, false, false, true, 1.5
 		);
 		ConfigDraft draft = new ConfigDraft(original);
@@ -42,5 +42,17 @@ class ConfigDraftTest {
 
 		assertEquals(ConfigDraft.PlayerSettings.defaults(), draft.current());
 		assertTrue(draft.isDirty());
+	}
+
+	@Test
+	void disablingExperimentalModeImmediatelyClampsSelection() {
+		ConfigDraft draft = new ConfigDraft(ConfigDraft.PlayerSettings.defaults());
+		draft.enableExperimentalExtremeSpeed(true);
+		draft.playerSelectedMultiplier(150.0);
+
+		draft.enableExperimentalExtremeSpeed(false);
+
+		assertFalse(draft.enableExperimentalExtremeSpeed());
+		assertEquals(100.0, draft.playerSelectedMultiplier());
 	}
 }

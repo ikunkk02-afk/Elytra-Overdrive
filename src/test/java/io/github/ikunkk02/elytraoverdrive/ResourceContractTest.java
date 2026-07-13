@@ -92,7 +92,26 @@ class ResourceContractTest {
 			assertTrue(translations.has("screen.elytra_overdrive.status.no_data"));
 			assertTrue(translations.has("screen.elytra_overdrive.firework.locked_help"));
 			assertTrue(translations.has("screen.elytra_overdrive.saved"));
+			assertTrue(translations.has("text.config.elytra-overdrive.option.enableExperimentalExtremeSpeed"));
+			assertTrue(translations.has("screen.elytra_overdrive.flight.standard_range"));
+			assertTrue(translations.has("screen.elytra_overdrive.flight.experimental_range"));
+			assertTrue(translations.has("screen.elytra_overdrive.experimental_warning.title"));
+			assertTrue(translations.has("screen.elytra_overdrive.experimental_warning.body"));
+			assertTrue(translations.has("screen.elytra_overdrive.experimental_warning.cancel"));
+			assertTrue(translations.has("screen.elytra_overdrive.experimental_warning.confirm"));
 		}
+	}
+
+	@Test
+	void experimentalExtremeSpeedRemainsLocalAndKeepsNetworkProtocolStable() throws IOException {
+		Path configModel = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "config", "OverdriveConfigModel.java");
+		Path requiredPayload = Path.of("src", "main", "java", "io", "github", "ikunkk02", "elytraoverdrive", "network", "RequiredClientPayload.java");
+		String configSource = Files.readString(configModel);
+		int field = configSource.indexOf("enableExperimentalExtremeSpeed = false");
+
+		assertTrue(field >= 0);
+		assertFalse(configSource.substring(Math.max(0, field - 80), field).contains("@Sync"));
+		assertTrue(contains(requiredPayload, "CURRENT_PROTOCOL = 3"));
 	}
 
 	@Test

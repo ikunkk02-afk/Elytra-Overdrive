@@ -6,6 +6,7 @@ import io.github.ikunkk02.elytraoverdrive.network.OverdriveStateS2CPayload;
 import io.github.ikunkk02.elytraoverdrive.network.HeldFireworkPreferenceC2SPayload;
 import io.github.ikunkk02.elytraoverdrive.network.RequiredClientPayload;
 import io.github.ikunkk02.elytraoverdrive.network.SelectedMultiplierC2SPayload;
+import io.github.ikunkk02.elytraoverdrive.flight.FlightSpeedController;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -41,9 +42,13 @@ public final class ClientOverdriveNetworking {
 
 	public static void sendPreferences() {
 		try {
-			if (ClientPlayNetworking.canSend(SelectedMultiplierC2SPayload.TYPE)) {
+			var validatedMultiplier = FlightSpeedController.validateClientMultiplier(
+					ElytraOverdrive.CONFIG.playerSelectedMultiplier()
+			);
+			if (validatedMultiplier.isPresent()
+					&& ClientPlayNetworking.canSend(SelectedMultiplierC2SPayload.TYPE)) {
 				ClientPlayNetworking.send(
-						new SelectedMultiplierC2SPayload(ElytraOverdrive.CONFIG.playerSelectedMultiplier())
+						new SelectedMultiplierC2SPayload(validatedMultiplier.getAsDouble())
 				);
 			}
 			if (ClientPlayNetworking.canSend(HeldFireworkPreferenceC2SPayload.TYPE)) {

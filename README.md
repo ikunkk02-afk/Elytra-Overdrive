@@ -39,6 +39,7 @@ Gameplay decisions are server-authoritative. The server validates flight activat
 - `Overdrive` (`超载`) is an Elytra enchantment available through the enchanting table, enchanted books, and anvils.
 - While gliding, it accelerates the player according to their selected multiplier.
 - The final multiplier never exceeds the server maximum.
+- The standard player range reaches `100×`; an explicit performance warning unlocks the experimental `100×–200×` range.
 - An Elytra without Overdrive keeps vanilla flight behavior unless the optional held-firework mode is authorized and enabled.
 
 ### Enchantable Elytra
@@ -110,6 +111,16 @@ The custom control terminal contains five sections:
 It displays confirmed flight state, activation source, selected multiplier, server cap, current speed, and Elytra durability. Player and visual settings can be edited locally; bombing, Breach, and server policy values are read-only for ordinary players.
 
 Mod Menu provides a convenient way to open the terminal, but it is not a required dependency.
+
+### Experimental Extreme Speed
+
+- Standard player range: up to `100×`
+- Experimental range: up to `200×`
+- Server default maximum: `100×`
+- Server configurable maximum: `200×`
+- Experimental Extreme Speed is disabled by default
+
+Speeds above `100×` can significantly increase chunk loading, world generation, memory usage, network traffic, client frame time, and server tick load. Actual results depend on hardware, whether the world is pregenerated, server performance, chunk-loading speed, and network conditions. `200×` is experimental and is not guaranteed to be stable on every server.
 
 ## Requirements
 
@@ -195,8 +206,9 @@ The configuration file is `config/elytra-overdrive.json5`. Player settings are e
 
 | Option | Default | Description |
 |---|---:|---|
-| `playerSelectedMultiplier` | `2.0` | Player-requested flight multiplier; allowed range `1.0–20.0`, then capped by the server. |
+| `playerSelectedMultiplier` | `2.0` | Player-requested flight multiplier; persistent range `1.0–200.0`, then capped by the server. |
 | `enableHeldFireworkOverdrive` | `false` | Personal request to use held-firework high-speed flight. |
+| `enableExperimentalExtremeSpeed` | `false` | Unlocks the warned `100×–200×` local UI range; this never grants server authority. |
 | `showHighSpeedParticles` | `true` | Master switch for local high-speed particles. |
 | `enableHighSpeedFov` | `true` | Enables the local dynamic FOV effect. |
 | `visualPreset` | `BALANCED` | Particle budget and FOV preset: `PERFORMANCE`, `BALANCED`, or `CINEMATIC`. |
@@ -212,7 +224,7 @@ The configuration file is `config/elytra-overdrive.json5`. Player settings are e
 |---|---:|---|
 | `enableHighSpeedFlight` | `true` | Master server switch for all high-speed flight. |
 | `allowHeldFireworkOverdrive` | `false` | Allows players on the server to request held-firework mode. |
-| `serverMaximumMultiplier` | `10.0` | Maximum effective multiplier; allowed range `1.0–20.0`. |
+| `serverMaximumMultiplier` | `100.0` | Maximum effective multiplier for new configurations; allowed range `1.0–200.0`. Existing configured values are preserved. |
 | `extraDurabilityDamage` | `true` | Enables additional Elytra durability use during high-speed flight. |
 | `extraDurabilityIntervalTicks` | `40` | Ticks between additional durability attempts; allowed range `10–200`. |
 | `elytraEnchantability` | `10` | Enchantment quality used for Elytra in the enchanting table; allowed range `1–30`. |

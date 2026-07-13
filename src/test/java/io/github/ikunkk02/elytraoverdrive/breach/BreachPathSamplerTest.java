@@ -84,6 +84,14 @@ class BreachPathSamplerTest {
 	}
 
 	@Test
+	void experimentalTargetSpeedKeepsLookAheadAtExistingSafetyCap() {
+		double lookAhead = BreachPathSampler.calculateLookAheadDistance(160.0);
+
+		assertTrue(Double.isFinite(lookAhead));
+		assertEquals(12.0, lookAhead);
+	}
+
+	@Test
 	void thickWallCanExposeMultipleDepthLayersInOneTick() {
 		var positions = BreachPathSampler.sample(
 				new BreachVector(0.5, 64.5, 0.5),

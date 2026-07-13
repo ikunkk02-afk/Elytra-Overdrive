@@ -26,6 +26,19 @@ class FlightSpeedControllerTest {
 	@Test
 	void infiniteClientMultiplierIsRejected() {
 		assertTrue(FlightSpeedController.validateClientMultiplier(Double.POSITIVE_INFINITY).isEmpty());
+		assertTrue(FlightSpeedController.validateClientMultiplier(Double.NEGATIVE_INFINITY).isEmpty());
+	}
+
+	@Test
+	void expandedClientRangeAcceptsStandardAndExperimentalMaximums() {
+		assertEquals(100.0, FlightSpeedController.validateClientMultiplier(100.0).orElseThrow());
+		assertEquals(200.0, FlightSpeedController.validateClientMultiplier(200.0).orElseThrow());
+	}
+
+	@Test
+	void expandedClientRangeRejectsNegativeAndAboveHardMaximum() {
+		assertTrue(FlightSpeedController.validateClientMultiplier(-1.0).isEmpty());
+		assertTrue(FlightSpeedController.validateClientMultiplier(200.01).isEmpty());
 	}
 
 	@Test
@@ -84,6 +97,32 @@ class FlightSpeedControllerTest {
 
 	@Test
 	void outOfGlobalRangeClientMultiplierIsRejected() {
-		assertFalse(FlightSpeedController.validateClientMultiplier(20.01).isPresent());
+		assertFalse(FlightSpeedController.validateClientMultiplier(200.01).isPresent());
+	}
+
+	@Test
+	void serverMaximumRemainsAuthoritativeAcrossExpandedRange() {
+		assertEquals(100.0, FlightSpeedController.clampMultiplier(200.0, 100.0));
+		assertEquals(200.0, FlightSpeedController.clampMultiplier(200.0, 200.0));
+		assertEquals(150.0, FlightSpeedController.clampMultiplier(150.0, 200.0));
+		assertEquals(50.0, FlightSpeedController.clampMultiplier(200.0, 50.0));
+		assertEquals(1.0, FlightSpeedController.clampMultiplier(200.0, Double.NaN));
+	}
+
+	@Test
+	void extremeTargetSpeedAndVelocityRemainFinite() {
+		assertEquals(80.0, FlightSpeedController.calculateTargetSpeed(100.0));
+		assertEquals(160.0, FlightSpeedController.calculateTargetSpeed(200.0));
+		assertTrue(Double.isFinite(FlightSpeedController.calculateTargetSpeed(200.0)));
+
+		FlightVelocity next = FlightSpeedController.calculateNextVelocity(
+				new FlightVelocity(159.5, 0.0, 0.0),
+				new FlightVelocity(1.0, 0.0, 0.0),
+				200.0
+		);
+		assertTrue(next.isFinite());
+		assertTrue(FlightSpeedController.applySpeedLimit(
+				new FlightVelocity(Double.MAX_VALUE, 0.0, 0.0), 160.0
+		).isFinite());
 	}
 }

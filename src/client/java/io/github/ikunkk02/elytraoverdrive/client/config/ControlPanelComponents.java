@@ -19,8 +19,12 @@ public final class ControlPanelComponents {
 	}
 
 	public static FlowLayout panel(Sizing horizontalSizing) {
+		return panel(horizontalSizing, ControlTerminalTheme.BORDER);
+	}
+
+	public static FlowLayout panel(Sizing horizontalSizing, int borderColor) {
 		FlowLayout panel = Containers.verticalFlow(horizontalSizing, Sizing.content());
-		panel.surface(ControlTerminalTheme.panel());
+		panel.surface(ControlTerminalTheme.panel(borderColor));
 		panel.padding(Insets.of(8));
 		panel.gap(5);
 		return panel;

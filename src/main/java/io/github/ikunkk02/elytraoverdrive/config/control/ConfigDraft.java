@@ -2,11 +2,13 @@ package io.github.ikunkk02.elytraoverdrive.config.control;
 
 import io.github.ikunkk02.elytraoverdrive.config.OverdriveConfig;
 import io.github.ikunkk02.elytraoverdrive.config.VisualPreset;
+import io.github.ikunkk02.elytraoverdrive.flight.FlightSpeedController;
 
 public final class ConfigDraft {
 	private PlayerSettings original;
 	private double playerSelectedMultiplier;
 	private boolean enableHeldFireworkOverdrive;
+	private boolean enableExperimentalExtremeSpeed;
 	private boolean showHighSpeedParticles;
 	private boolean enableHighSpeedFov;
 	private VisualPreset visualPreset;
@@ -25,6 +27,7 @@ public final class ConfigDraft {
 		return new ConfigDraft(new PlayerSettings(
 				config.playerSelectedMultiplier(),
 				config.enableHeldFireworkOverdrive(),
+				config.enableExperimentalExtremeSpeed(),
 				config.showHighSpeedParticles(),
 				config.enableHighSpeedFov(),
 				config.visualPreset(),
@@ -40,6 +43,7 @@ public final class ConfigDraft {
 		return new PlayerSettings(
 				this.playerSelectedMultiplier,
 				this.enableHeldFireworkOverdrive,
+				this.enableExperimentalExtremeSpeed,
 				this.showHighSpeedParticles,
 				this.enableHighSpeedFov,
 				this.visualPreset,
@@ -63,6 +67,7 @@ public final class ConfigDraft {
 		PlayerSettings settings = current();
 		config.playerSelectedMultiplier(settings.playerSelectedMultiplier());
 		config.enableHeldFireworkOverdrive(settings.enableHeldFireworkOverdrive());
+		config.enableExperimentalExtremeSpeed(settings.enableExperimentalExtremeSpeed());
 		config.showHighSpeedParticles(settings.showHighSpeedParticles());
 		config.enableHighSpeedFov(settings.enableHighSpeedFov());
 		config.visualPreset(settings.visualPreset());
@@ -76,8 +81,16 @@ public final class ConfigDraft {
 	}
 
 	private void load(PlayerSettings settings) {
-		this.playerSelectedMultiplier = clamp(settings.playerSelectedMultiplier(), 1.0, 20.0);
+		this.playerSelectedMultiplier = clamp(
+				settings.playerSelectedMultiplier(),
+				FlightSpeedController.MIN_MULTIPLIER,
+				FlightSpeedController.MAX_MULTIPLIER
+		);
 		this.enableHeldFireworkOverdrive = settings.enableHeldFireworkOverdrive();
+		this.enableExperimentalExtremeSpeed = settings.enableExperimentalExtremeSpeed();
+		if (!this.enableExperimentalExtremeSpeed) {
+			this.playerSelectedMultiplier = ExperimentalSpeedRules.selectionAfterDisable(this.playerSelectedMultiplier);
+		}
 		this.showHighSpeedParticles = settings.showHighSpeedParticles();
 		this.enableHighSpeedFov = settings.enableHighSpeedFov();
 		this.visualPreset = settings.visualPreset() == null ? VisualPreset.BALANCED : settings.visualPreset();
@@ -93,9 +106,20 @@ public final class ConfigDraft {
 	}
 
 	public double playerSelectedMultiplier() { return this.playerSelectedMultiplier; }
-	public void playerSelectedMultiplier(double value) { this.playerSelectedMultiplier = clamp(value, 1.0, 20.0); }
+	public void playerSelectedMultiplier(double value) {
+		this.playerSelectedMultiplier = clamp(
+				value, FlightSpeedController.MIN_MULTIPLIER, FlightSpeedController.MAX_MULTIPLIER
+		);
+	}
 	public boolean enableHeldFireworkOverdrive() { return this.enableHeldFireworkOverdrive; }
 	public void enableHeldFireworkOverdrive(boolean value) { this.enableHeldFireworkOverdrive = value; }
+	public boolean enableExperimentalExtremeSpeed() { return this.enableExperimentalExtremeSpeed; }
+	public void enableExperimentalExtremeSpeed(boolean value) {
+		this.enableExperimentalExtremeSpeed = value;
+		if (!value) {
+			this.playerSelectedMultiplier = ExperimentalSpeedRules.selectionAfterDisable(this.playerSelectedMultiplier);
+		}
+	}
 	public boolean showHighSpeedParticles() { return this.showHighSpeedParticles; }
 	public void showHighSpeedParticles(boolean value) { this.showHighSpeedParticles = value; }
 	public boolean enableHighSpeedFov() { return this.enableHighSpeedFov; }
@@ -116,6 +140,7 @@ public final class ConfigDraft {
 	public record PlayerSettings(
 			double playerSelectedMultiplier,
 			boolean enableHeldFireworkOverdrive,
+			boolean enableExperimentalExtremeSpeed,
 			boolean showHighSpeedParticles,
 			boolean enableHighSpeedFov,
 			VisualPreset visualPreset,
@@ -127,7 +152,7 @@ public final class ConfigDraft {
 	) {
 		public static PlayerSettings defaults() {
 			return new PlayerSettings(
-					2.0, false, true, true, VisualPreset.BALANCED,
+					2.0, false, false, true, true, VisualPreset.BALANCED,
 					true, true, true, false, 1.0
 			);
 		}

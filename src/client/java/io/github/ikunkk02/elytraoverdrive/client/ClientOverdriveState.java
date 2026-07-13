@@ -4,6 +4,7 @@ import io.github.ikunkk02.elytraoverdrive.flight.FlightSpeedController;
 import io.github.ikunkk02.elytraoverdrive.flight.FlightActivationSource;
 import io.github.ikunkk02.elytraoverdrive.config.VisualPreset;
 import io.github.ikunkk02.elytraoverdrive.visual.VisualIntensity;
+import io.github.ikunkk02.elytraoverdrive.visual.FovBoostCalculator;
 
 public final class ClientOverdriveState {
 	private static double effectiveMultiplier = FlightSpeedController.MIN_MULTIPLIER;
@@ -58,8 +59,9 @@ public final class ClientOverdriveState {
 			VisualIntensity visualIntensity = VisualIntensity.fromSpeed(
 					speed, effectiveMultiplier, true, preset, reduceMotion
 			);
-			target = Math.min(15.0, Math.max(0.0, (speed - 0.9) * 6.0))
-					* visualIntensity.scaledFovFactor(fovIntensity);
+			target = FovBoostCalculator.targetBoost(
+					speed, visualIntensity.scaledFovFactor(fovIntensity)
+			);
 		}
 		fovBoost += (target - fovBoost) * 0.15;
 		if (Math.abs(fovBoost) < 1.0E-4 && target == 0.0) {
